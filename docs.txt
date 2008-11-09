@@ -1,0 +1,52 @@
+The jQuery Audio Player plugin
+
+by Richard Hulse  (richard.hulse@radionz.co.nz)
+Copyright (c) 2008, Radio New Zealand Limited
+
+==================
+NOTES
+==================
+
+The plugin will load an MP3 or OGG file and play it. The running time and current
+volume can be fetched and displayed.
+
+There is much to do, such as:
+
+* Add id3 data population of player title and description
+* Allow an audio metadata structure to be used on the load function
+* Playlist functionality
+
+The player will be implemented as a set of plugins so that anyone can build the exact functionality
+that they want.
+
+==================
+To Use the example
+==================
+
+Add the jQuery library v 1.2.6 and an MP3 or OGG file to the working directory and edit example.html to play it.  
+
+==================
+LICENSE
+==================
+
+The code written by Radio NZ is released under the GPL V2.0 or later.
+
+The license used by other code is noted in the source, but is compatible.
+
+==================
+RELEASES
+==================
+
+# Version 0.1
+
+Initial Release
+
+
+
+==================
+CREDITS
+==================
+
+The player was inspired by MooSound. (We had to use jQuery.)
+
+The flash player is mostly the same as the one used by MooSound with some changes.

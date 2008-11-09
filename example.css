@@ -1,0 +1,47 @@
+*{font-size:100%;margin:0;padding:0;}
+body{font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
+img{border:none;}
+
+h1{margin:10px;}
+
+.hide {left:-9999px;position:absolute;}
+
+#player-wrapper{position:relative;  border:1px solid #310C04; background:#DDD;
+	width:500px;height:120px;z-index:99;}
+
+#time-wrapper{position:absolute; top:65px; left:390px;}
+
+#counter{padding:5px; margin:10px; border:1px solid gray; width:5em; text-align:right; 
+	font-size:14px; font-weight:bold; background:#FFF;}
+
+#volume{ position:absolute; left: 300px; top:120px; z-index:100; font-size:14px;}
+
+ul{margin:5px 0 0 0;padding:0;list-style:none;}
+li{margin:0;padding:0;}
+
+.items li span{ display:block;}
+
+span.title{font-size:1.0em;padding:0 5px; font-weight:bold;}
+span.desc{display:block; padding: 2px 5px 0 ; font-weight:normal; font-size:0.8em; }
+
+#controls{margin:0px 10px; position:absolute;top:60px;}
+#controls li{list-style:none;display:inline;padding-right:5px;}
+#controls li input{
+  background:url(play-icons.png) no-repeat top left;
+  text-align:center;
+  border:none;
+  color:#000;
+  font-family:arial,sans-serif;
+  text-decoration:none;
+	width:50px; height:50px;
+}
+#controls li #last{background-position:0 0;}
+#controls li #stop{background-position:-50px 0;}
+#controls li .play{background-position:-100px 0;}
+#controls li .playing{background-position:-150px 0;}
+#controls li #next{background-position:-200px 0;}
+#controls li #quieter{margin-left:20px; background-position:-300px 0;}
+#controls li #louder{background-position:-250px 0;}
+#controls li a span{position:absolute;left:-9000px;}
+
+
