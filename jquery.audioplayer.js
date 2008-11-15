@@ -237,7 +237,7 @@
 
 		switch( cmd ) {
 			case 'load' 	: $('audio').attr({
-													src: current_url,
+													src: audio.current_url,
 											});
 											setOGGVolume( audio.volume );
 											OGG.muted = false;
