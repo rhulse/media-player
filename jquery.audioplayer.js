@@ -6,7 +6,7 @@
 	
 	Copyright (c) 2008 Radio New Zealand
 	Author: Richard Hulse
-	This software is released under the GNU GPL License version 2 or later. <http://www.opensource.org/licenses/gpl-2.0.php>
+	This software is released under the GNU GPL version 2 or later. <http://www.opensource.org/licenses/gpl-2.0.php>
 
 */
 
