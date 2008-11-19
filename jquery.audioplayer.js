@@ -192,8 +192,11 @@
 	function attach_audio_tag() {
 		$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
 		audio_elements = $('audio');
-		if ( 'volume' in audio_elements[0] ) {
-			// a single elemet is used at the moment.
+		// testing for volume is not a good test for Vorbis support because
+		// for example, Safari has <audio> tag support for quicktime, so will pass this test
+		// so we test that it's mozilla too. Seems like a safe assumption for now.
+		if ( 'volume' in audio_elements[0] && $.browser.mozilla ){
+			// a single element is used at the moment.
 			OGG = audio_elements[0];
 		}
 	}
