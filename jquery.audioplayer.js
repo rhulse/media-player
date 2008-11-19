@@ -81,23 +81,17 @@
 		},
 
 	  stop: function() {
-			if ( audioCommand( 'stop' ) ) {
-				this.events.onSoundStop();
-			}
+			audioCommand( 'stop' );
 		},
 
 		play: function( position ) {
 			// do we resume or start at the stated position
 			audio.current_pos = (audio.paused_at) ? audio.paused_at : position;
-			if ( audioCommand( 'play' ) ){
-				this.events.onSoundPlay();
-			}
+			audioCommand( 'play' );
 		},
 
 	  pause: function() {
-			if ( audioCommand( 'pause' ) ) {
-				this.events.onSoundPause();
-			}
+			audioCommand( 'pause' );
 	  },
 
 		louder: function() {
@@ -105,9 +99,7 @@
 				return;
 			}
       audio.volume += audio.volume_increment;
-			if ( audioCommand( 'volume' ) ) {
-				this.events.onSoundVolume();
-			}
+			audioCommand( 'volume' );
     },
 
     quieter: function() {
@@ -115,9 +107,7 @@
 				return;
 			}
       audio.volume -= audio.volume_increment;
-			if ( audioCommand( 'volume' ) ) {
-				this.events.onSoundVolume();
-			}
+			audioCommand( 'volume' );
     },
 
 		elapsedTime: function() {
@@ -235,23 +225,28 @@
 			sendEvent( "soundMessage", { message: 'No Flash MP3 player is available'} );
 			return;
 		}
+		var e = $.audioPlayer.events;
 
 		switch( cmd ) {
 			case 'load' 	:
 											break;
 
 			case 'play' 	: SWF.startSound( audio.current_url, audio.current_pos, audio.volume, audio.pan );
+											e.onSoundPlay();
 											break;
 
 			case 'stop' 	: SWF.stopSound( audio.current_url );
 											audio.paused_at = 0;
+											e.onSoundStop();
 											break;
 
 			case 'pause'	:	SWF.stopSound( audio.current_url );
 											audio.paused_at = SWF.getPosition( audio.current_url ) || audio.paused_at;
+											e.onSoundPause();
 											break;
 
 			case 'volume' : SWF.setVolume( audio.current_url, audio.volume );
+											e.onSoundVolume();
 											break;
 
 			case 'elapsedTime' : return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
@@ -263,6 +258,8 @@
 	function OGGCommand ( cmd ){
 		if ( ! OGG ) return false;
 
+		var e = $.audioPlayer.events;
+
 		switch( cmd ) {
 			case 'load' 	: $('audio').attr({
 													src: audio.current_url,
@@ -272,18 +269,22 @@
 											break;
 
 			case 'play' 	: OGG.play();
+											e.onSoundPlay();
 											break;
 
 			case 'stop' 	: OGG.pause();
 											OGG.currentTime = 0;
 											audio.paused_at = 0;
+											e.onSoundStop();
 											break;
 
 			case 'pause'	:	OGG.pause();
 											audio.paused_at = OGG.currentTime;
+											e.onSoundPause();
 											break;
 
 			case 'volume' : setOGGVolume( audio.volume );
+											e.onSoundVolume();
 											break;
 
 			case 'elapsedTime' : return OGG.currentTime;
