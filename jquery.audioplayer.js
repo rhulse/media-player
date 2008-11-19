@@ -190,7 +190,7 @@
 	}
 
 	function attach_audio_tag() {
-		$("body").append('<audio id="ogg-player"></audio>');
+		$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
 		audio_elements = $('audio');
 		if ( 'volume' in audio_elements[0] ) {
 			// a single elemet is used at the moment.
