@@ -3,7 +3,7 @@
 
 	This plugin sets up an audio player that can handle MP3 and OGG formats
 	A flash object is used for MP3 and the <audio> tag (if supported) is for OGG.
-	
+
 	Copyright (c) 2008 Radio New Zealand
 	Author: Richard Hulse
 	This software is released under the GNU GPL version 2 or later. <http://www.opensource.org/licenses/gpl-2.0.php>
@@ -49,14 +49,16 @@
 				playing : false,
 				paused_at : 0,
 				current_url : '',
-				current_pos : 0
+				current_pos : 0,
+				loading : false
 	};
-	
+
+	// a place to save the first command if we have to wait for the flash object to load
+	var saved_cmd = [];
 
 	// this equals seconds
-	
 	var settings = {};
-	
+
   // Public Variables and Methods
   $.audioPlayer = {
 
@@ -65,7 +67,7 @@
 			flash.exp 			= settings.mp3Export || flash.exp;
 //			callback.volume = settings.volumeCallback || callback.volume;
 //			callback.timer	= settings.timerCallback || callback.timer;
-			
+
 			attach_flash_player();
 			attach_audio_tag();
 			// send initial volume and position
@@ -81,7 +83,7 @@
 	  stop: function() {
 			if ( audioCommand( 'stop' ) ) {
 				this.events.onSoundStop();
-			} 
+			}
 		},
 
 		play: function( position ) {
@@ -99,8 +101,8 @@
 	  },
 
 		louder: function() {
-      if ( audio.volume >= audio.volume_max ){ 
-				return; 
+      if ( audio.volume >= audio.volume_max ){
+				return;
 			}
       audio.volume += audio.volume_increment;
 			if ( audioCommand( 'volume' ) ) {
@@ -109,7 +111,7 @@
     },
 
     quieter: function() {
-      if ( audio.volume <= 0.0 ) { 
+      if ( audio.volume <= 0.0 ) {
 				return;
 			}
       audio.volume -= audio.volume_increment;
@@ -129,18 +131,18 @@
 		getVolume: function() {
 			return audio.volume;
 		},
-		
+
 		isPlaying: function() {
 			return audio.playing;
 		},
-		
+
 		isPaused: function() {
 			return ( audio.paused_at > 0 ) ? true : false;
 		},
 
 		// called directy by the flash movie and triggered by events from <audio>
 		events : {
-			
+
 			// events from the flash player
 			onSoundComplete: function() {
 				audioCommand( 'stop' );
@@ -150,8 +152,16 @@
 
 			onFlashLoaded: function() {
 				saveFlash();
+				flash.loading = false;
+				// check for commands that were run before the swf was loaded
+				if ( saved_cmd.length ) {
+					$.each(saved_cmd, function(index, cmd) {
+						audioCommand(cmd);
+					});
+					saved_cmd = [];
+				}
 			},
-		
+
 			onSoundStop: function() {
 				audio.playing = false;
 				sendEvent( "soundStop" );
@@ -161,12 +171,12 @@
 				audio.playing = false;
 				sendEvent( "soundPause" );
 			},
-			
+
 			onSoundPlay: function() {
 				audio.playing = true;
 				sendEvent( "soundPlay" );
 			},
-		
+
 			onSoundVolume: function() {
 				sendEvent( "soundVolumeChange", { volume: audio.volume})
 			},
@@ -179,14 +189,16 @@
 	};
 
  	//Private Functions
-	function attach_flash_player() {		
+	function attach_flash_player() {
 		var f = flash;
 		$("body").append('<div id="mp3-player"><p></p></div>');
+		flash.loading = true;
 		jQuery.swfobject.embedSWF( f.path, f.replace, f.width, f.height, f.ver, f.exp, f.vars, f.params, f.attribs);
 	}
 
 	function saveFlash() {
-		SWF = jQuery.swfobject.getObjectById(flash.attribs.id);		
+		SWF = jQuery.swfobject.getObjectById(flash.attribs.id);
+		flash.loading = false;
 	}
 
 	function attach_audio_tag() {
@@ -211,6 +223,11 @@
 	}
 
 	function SWFCommand ( cmd ){
+		if ( flash.loading && ! SWF ) {
+			saved_cmd.push(cmd);
+			return;
+		}
+
 		switch( cmd ) {
 			case 'load' 	:
 											break;
@@ -232,7 +249,7 @@
 			case 'elapsedTime' : return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
 											break;
 		}
-		return true;		
+		return true;
 	}
 
 	function OGGCommand ( cmd ){
@@ -270,13 +287,13 @@
 	function setOGGVolume( vol ) {
 		OGG.volume = audio.volume / 100;
 	}
-	
+
 	function sendEvent ( event, params ) {
 		$(document).trigger( event, params )
 	}
 
 	$.audioPlayer.settings = {};
-	
+
 
 })(jQuery);
 
