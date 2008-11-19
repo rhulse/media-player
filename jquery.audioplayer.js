@@ -35,7 +35,8 @@
 			attribs : {
 				id:"flashplayer",
 				name:"flashplayer"
-			}
+			},
+			loading : false
 	};
 
 	var audio = {
@@ -49,8 +50,7 @@
 				playing : false,
 				paused_at : 0,
 				current_url : '',
-				current_pos : 0,
-				loading : false
+				current_pos : 0
 	};
 
 	// a place to save the first command if we have to wait for the flash object to load
@@ -182,7 +182,7 @@
 			},
 
 			onSoundPosition: function() {
-				sendEvent( "soundPositionChange", { volume: audio.volume})
+				sendEvent( "soundPositionChange", { position: audio.current_pos})
 			}
 		}
 
