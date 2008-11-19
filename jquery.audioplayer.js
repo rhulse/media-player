@@ -194,6 +194,8 @@
 		$("body").append('<div id="mp3-player"><p></p></div>');
 		flash.loading = true;
 		jQuery.swfobject.embedSWF( f.path, f.replace, f.width, f.height, f.ver, f.exp, f.vars, f.params, f.attribs);
+		// the movie has 1 seconds to load, after which we assume it has probably failed
+		$.periodic(function(){ flash.loading = false; return false; }, {frequency: 1.0});
 	}
 
 	function saveFlash() {
@@ -224,7 +226,13 @@
 
 	function SWFCommand ( cmd ){
 		if ( flash.loading && ! SWF ) {
+			// commands are saved for up to 1 second while the flash movie initialises.
 			saved_cmd.push(cmd);
+			return;
+		}
+		// then if there is no movie then send a message
+		if ( ! SWF ) {
+			sendEvent( "soundMessage", { message: 'No Flash MP3 player is available'} );
 			return;
 		}
 
