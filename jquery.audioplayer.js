@@ -53,6 +53,9 @@
 				current_pos : 0
 	};
 
+	// Set to true if you want to only use the <audio> tag
+	var ignore_flash = false;
+
 	// a place to save the first command if we have to wait for the flash object to load
 	var saved_cmd = [];
 
@@ -63,12 +66,14 @@
   $.audioPlayer = {
 
 		initialise: function( settings ) {
+			ignore_flash 		= settings.ignore_flash || ignore_flash;
 			flash.path 			= settings.mp3Player || flash.path;
 			flash.exp 			= settings.mp3Export || flash.exp;
 //			callback.volume = settings.volumeCallback || callback.volume;
 //			callback.timer	= settings.timerCallback || callback.timer;
-
-			attach_flash_player();
+			if( ! ignore_flash ) {
+				attach_flash_player();
+			}
 			attach_audio_tag();
 			// send initial volume and position
 			this.events.onSoundVolume();
