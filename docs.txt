@@ -23,7 +23,7 @@ that they want.
 To Use the example
 ==================
 
-Add the jQuery library v 1.2.6 and an MP3 or OGG file to the working directory and edit example.html to play it.  
+Add the jQuery library v 1.2.6 and an MP3 or OGG file to the working directory and edit example.html to play it.
 
 ==================
 Files included
@@ -57,17 +57,26 @@ The license used by other code is noted in the source, but is compatible.
 
 The graphics files (Player Buttons) are licensed under a Attribution-Noncommercial-Share Alike 3.0 (New Zealand).
 
-Graphics files are from Radio New Zealand's audio player 
+Graphics files are from Radio New Zealand's audio player
 project at: http://github.com/rhulse/audio-player--using-javascript-/wikis/home
 
 ==================
 RELEASES
 ==================
 
-# Version 0.1
+# 0.11 (20 Nov 2008, later today) 
 
-Initial Release
+A bunch of small improvements to ensure the plugin API is stable under all conditions, and a new parameter that can be used during the initialisation phase to not load flash (for people who want to stick to free software). Also implemented the new type attribute in the audio tag.
 
+The player now drives the timer updates via events. I figure most people won't want to think about formatting times so the player now sends an event every 1 second for the formatted time. (this will eventually be configurable to allow 1/10 second resolution).
+
+There were also changes to the way the player interacts with the audio element.
+
+The code for updating the audio item time was moved to a function to allow us to be more specific about when  it is called and also to help with moving to driving the udpates via events. 
+
+# 0.1 
+
+The initial release is fairly basic – you can give it an MP3 or Ogg file (in Firefox 3.1 which has built in Ogg Vorbis support) – and it will play it.
 
 
 ==================
