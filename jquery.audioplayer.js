@@ -257,7 +257,9 @@
 											if ( $.audioPlayer.isStopped() ) {
 													return 0;
 											}
-											return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
+											else{
+												return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
+											}
 											break;
 		}
 		return true;
@@ -281,6 +283,7 @@
 											break;
 
 			case 'stop' 	: OGG.pause();
+											// this is really a seek
 											OGG.currentTime = 0;
 											audio.paused_at = 0;
 											e.onSoundStop();
@@ -295,7 +298,15 @@
 											e.onSoundVolume();
 											break;
 
-			case 'elapsedTime' : return OGG.currentTime;
+			case 'elapsedTime' :
+											if( $.audioPlayer.isStopped() ){
+												// setting the curentTime on audio is a seek so return 0
+												// instead of waiting for the seek
+												return 0;
+											}
+											else{
+												return OGG.currentTime;
+											}
 											break;
 		}
 		return true;
