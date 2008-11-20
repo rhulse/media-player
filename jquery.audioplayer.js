@@ -127,6 +127,13 @@
 			return ( audio.paused_at > 0 ) ? true : false;
 		},
 
+		isStopped: function() {
+			if( ! audio.playing && ! $.audioPlayer.isPaused() ){
+				return true;
+			}
+			return false;
+		},
+
 		// called directy by the flash movie and triggered by events from <audio>
 		events : {
 
@@ -247,7 +254,7 @@
 											break;
 
 			case 'elapsedTime' : // flash does not return 0 for position if player is stopped. Annoying
-											if ( ! audio.playing && ! $.audioPlayer.isPaused() ) {
+											if ( $.audioPlayer.isStopped() ) {
 													return 0;
 											}
 											return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
