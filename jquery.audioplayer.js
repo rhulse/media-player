@@ -112,10 +112,6 @@
     },
 
 		elapsedTime: function() {
-			// flash does not return 0 for position if player is stopped. Annoying
-			if ( !audio.playing && !this.isPaused() ) {
-				return 0;
-			}
 			return audioCommand( 'elapsedTime' );
 		},
 
@@ -250,7 +246,11 @@
 											e.onSoundVolume();
 											break;
 
-			case 'elapsedTime' : return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
+			case 'elapsedTime' : // flash does not return 0 for position if player is stopped. Annoying
+											if ( ! audio.playing && ! $.audioPlayer.isPaused() ) {
+													return 0;
+											}
+											return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
 											break;
 		}
 		return true;
