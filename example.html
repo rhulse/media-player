@@ -16,20 +16,25 @@ jQuery(document).ready(function(){
 	// e.g. the time and volume DOM containers
 
 	$(document).bind('soundVolumeChange', function(e, m){
-		$('#volume').html( updateVolume(m.volume)  );	
-	}); 			
+		$('#volume').html( m.volume + '%' );
+	});
 
 	$(document).bind('soundStop soundPause', function(e, m){
 		$('#play').removeClass( 'playing');
-	}); 			
+	});
 
 	$(document).bind('soundPlay', function(e, m){
 		$('#play').addClass( 'playing');
-	}); 			
+	});
 
 	$(document).bind('soundMessage', function(e, m){
 		alert(m.message);
 	});
+
+	$(document).bind('soundPositionChange', function(e, m){
+		$(".seconds").html( m.position );
+	});
+
 
 	$.audioPlayer.initialise( {
 			mp3Player			: "audioplayer.swf",
@@ -60,37 +65,7 @@ jQuery(document).ready(function(){
    $('#louder').click( function(){
 		$.audioPlayer.louder();
 	});
-		
-	$.periodic(updateTime, {frequency: 0.1});
-		
-	function updateVolume( vol ){
-		$('#volume').html( vol  + '%');	
-	}
-		
-	function updateTime(){
-		var time = $.audioPlayer.elapsedTime();
-		$(".seconds").html(formatTime( time ));
-		return true;
-	}
 
-	function formatTime( dur ){
-
-			var difference = Math.floor(dur);
-			seconds    =  difference % 60;
-			difference = (difference - seconds) / 60;
-			minutes    =  difference % 60;
-			difference = (difference - minutes) / 60;
-			hours      =  difference % 24;
-
-	    seconds = ((seconds <  10) ? "0" : "") + seconds;
-
-			if(hours > 0){
-		    return hours + ":" + minutes + ":" + seconds;
-			}
-			else{
-		    return minutes + ":" + seconds;
-			}
-		}		
 
 })
 
@@ -107,7 +82,7 @@ jQuery(document).ready(function(){
 						<span class="desc">This is the description of the item and can be up to 128 chars, which is a lot longer than the title and would extent out to here X.</span></li>
 			</ul>
 		</div>
-	
+
 		<!-- Section for showing the current clip time -->
 		<div id="time-wrapper">
 			<h2 class="hide">Current time</h2>
@@ -129,9 +104,9 @@ jQuery(document).ready(function(){
 	  	</ul>
 		</div>
 	</div>
-	
+
 	<div id="volume">
-	
+
 	</div>
 
 </body>

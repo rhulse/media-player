@@ -56,6 +56,9 @@
 	// Set to true if you want to only use the <audio> tag
 	var ignore_flash = false;
 
+	// this is how often to update the position count (in seconds)
+	var udpate_position_interval = 1.0;
+
 	// a place to save the first command if we have to wait for the flash object to load
 	var saved_cmd = [];
 
@@ -72,8 +75,10 @@
 			}
 			attach_audio_tag();
 			// send initial volume and position
+
 			this.events.onSoundVolume();
-			this.events.onSoundPosition();
+
+			$.periodic( this.events.onSoundPosition, { frequency: udpate_position_interval } );
 		},
 
 	  load: function( url ) {
@@ -154,11 +159,13 @@
 					});
 					saved_cmd = [];
 				}
+				update_position();
 			},
 
 			onSoundStop: function() {
 				audio.playing = false;
 				sendEvent( "soundStop" );
+				update_position();
 			},
 
 			onSoundPause: function() {
@@ -176,7 +183,10 @@
 			},
 
 			onSoundPosition: function() {
-				sendEvent( "soundPositionChange", { position: audio.current_pos})
+				if( audio.playing ){
+					update_position();
+				}
+				return true;
 			}
 		}
 
@@ -207,6 +217,7 @@
 			// a single element is used at the moment.
 			OGG = audio_elements[0];
 		}
+		update_position();
 	}
 
 	function audioCommand( cmd ) {
@@ -320,8 +331,32 @@
 		$(document).trigger( event, params )
 	}
 
-	$.audioPlayer.settings = {};
+	function update_position() {
+		time = audioCommand('elapsedTime');
+		position = formatTime( time );
+		sendEvent( "soundPositionChange", { position: position });
+	}
 
+	function formatTime( dur ){
+
+			var difference = Math.floor(dur);
+			seconds    =  difference % 60;
+			difference = (difference - seconds) / 60;
+			minutes    =  difference % 60;
+			difference = (difference - minutes) / 60;
+			hours      =  difference % 24;
+
+	    seconds = ((seconds <  10) ? "0" : "") + seconds;
+
+			if(hours > 0){
+		    return hours + ":" + minutes + ":" + seconds;
+			}
+			else{
+		    return minutes + ":" + seconds;
+			}
+		}
+
+		$.audioPlayer.settings = {};
 
 })(jQuery);
 
