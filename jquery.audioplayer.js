@@ -117,7 +117,7 @@
     },
 
 		elapsedTime: function() {
-			return audioCommand( 'elapsedTime' );
+			current_position();
 		},
 
 		getVolume: function() {
@@ -265,12 +265,7 @@
 											break;
 
 			case 'elapsedTime' : // flash does not return 0 for position if player is stopped. Annoying
-											if ( $.audioPlayer.isStopped() ) {
-													return 0;
-											}
-											else{
-												return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
-											}
+											return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
 											break;
 		}
 		return true;
@@ -309,16 +304,10 @@
 											e.onSoundVolume();
 											break;
 
-			case 'elapsedTime' :
-											if( $.audioPlayer.isStopped() ){
-												// setting the curentTime on audio is a seek so return 0
-												// instead of waiting for the seek
-												return 0;
-											}
-											else{
-												return OGG.currentTime;
-											}
-											break;
+			case 'elapsedTime' : // this is the current seeked to time
+											return OGG.currentTime;
+											break
+
 		}
 		return true;
 	}
@@ -332,9 +321,15 @@
 	}
 
 	function update_position() {
-		time = audioCommand('elapsedTime');
-		position = formatTime( time );
+		position = formatTime( current_position() );
 		sendEvent( "soundPositionChange", { position: position });
+	}
+
+	function current_position() {
+		if ( $.audioPlayer.isStopped() ) {
+			return 0;
+		}
+		return audioCommand('elapsedTime');
 	}
 
 	function formatTime( dur ){
