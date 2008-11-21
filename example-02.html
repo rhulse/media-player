@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Audio Player example</title>
+<style type="text/css" media="screen">
+ @import 'example.css';
+</style>
+<script type="text/javascript" src="jquery-1.2.6.min.js "></script>
+<script type="text/javascript" src="jquery.attachpopup.js "></script>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+	$('dl.audio a').attachPopup();
+
+})
+
+</script>
+</head>
+<body>
+	<h1>Audio Player - Popup demo</h1>
+	<dl class="audio">
+		<dt><a href="robot2.mp3">This is an audio link</a></dt>
+		<dd>And this is the description of the audio item it is a bit longer</dd>
+	</dl>
+
+</body>
+</html>

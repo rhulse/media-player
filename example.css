@@ -44,4 +44,7 @@ span.desc{display:block; padding: 2px 5px 0 ; font-weight:normal; font-size:0.8e
 #controls li #louder{background-position:-250px 0;}
 #controls li a span{position:absolute;left:-9000px;}
 
-
+dl.audio{padding-left:16px;padding-right:16px;}
+dt{font-size:0.9em;padding-bottom:5px;}
+dt a{background:transparent url(mysource_files/audioicon.png) no-repeat scroll 0 2px;color:#CC0000;padding:0 0 6px 21px;}
+dd{padding:0 60px 10px 21px;}
