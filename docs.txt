@@ -20,10 +20,15 @@ The player will be implemented as a set of plugins so that anyone can build the 
 that they want.
 
 ==================
-To Use the example
+To Use the examples
 ==================
 
 Add the jQuery library v 1.2.6 and an MP3 or OGG file to the working directory and edit example.html to play it.
+
+Example 01
+
+This is a plain old player that show the basic functionality of the module
+
 
 ==================
 Files included
