@@ -8,10 +8,32 @@
 </style>
 <script type="text/javascript" src="jquery-1.2.6.min.js "></script>
 <script type="text/javascript" src="jquery.audioplayer.js "></script>
+<script type="text/javascript" src="jquery.cookie.js "></script>
 <script type="text/javascript">
 
 
 jQuery(document).ready(function(){
+
+	// register our cleanup function
+	// do stuff when the play window is closed
+	$(window).unload( function () {
+		$.cookie('audioPlayerOpen', null);
+	});
+
+	/*
+		Set a cookie so that the parent window knows that we are open.
+
+		We have to signal via cookies as the user might have moved to another
+		page in the parent window since the player was opened.
+
+		This is a valid action - the user might be listening to  audio, and we
+		don't want to reload new content into the same window if they click
+		on another link but instead pass the new URL via a function call.
+
+		Apart from saving on traffic, this will allow a future playlist
+		functionality to work correctly.
+	*/
+	$.cookie('audioPlayerOpen', 'open', 1);
 
 	// events must always come first as DOM elements could be updated from the initialise function
 	// e.g. the time and volume DOM containers
