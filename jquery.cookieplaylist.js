@@ -34,7 +34,7 @@
 
 		this.add = function(id){
 			this.load();
-			if( ! in_array( id, playlist ) ) {
+			if( ! in_array( id, this.playlist ) ) {
 				this.playlist.push(id);
 				this.save();
 			}
