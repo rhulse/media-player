@@ -18,13 +18,16 @@
 	var DEBUG = 1;
 
 	var playlist = new Array();
-
+	
+	var cookie_name = 'audio_playlist';
+	
 	var paused_at = 0;
 
   // Public Variables and Methods
   $.cookiePlaylist = {
 
-		initialise: function() {
+		initialise: function( playlist_name ) {
+			cookie_name	= playlist_name || cookie_name;
 			this.load();
 		},
 
@@ -53,17 +56,17 @@
 		},
 
 		save: function(){
-			$.cookie( 'rnz_player', playlist.join(), {duration: 14} );
+			$.cookie( cookie_name, playlist.join(), {duration: 14} );
 			// console.log("playlist: saved playlist - " + playlist);
 		},
 
 		clear: function(id){
-			$.cookie( 'rnz_player', null );
+			$.cookie( cookie_name, null );
 		},
 
 		load: function(){
 			var temp_playlist = new Array();
-			var pstr = $.cookie('rnz_player');
+			var pstr = $.cookie( cookie_name );
 			if( pstr ){
 				temp_playlist = pstr.split(',');
 			}
