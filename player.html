@@ -8,19 +8,33 @@
 </style>
 <script type="text/javascript" src="jquery-1.2.6.min.js "></script>
 <script type="text/javascript" src="jquery.audioplayer.js "></script>
+<script type="text/javascript" src="jquery.cookieplaylist.js "></script>
 <script type="text/javascript" src="jquery.cookie.js "></script>
 <script type="text/javascript">
+
+// two playlist are iused.
+// the queue holds items sent over from the main window
+var queue;
+// the playlist holds the real current playlist
+var playlist;
 
 function updatePlaylist(){
 	// shell function
 }
 
-function notifyOpener(){
-	console.log(self.opener)
+function checkPlaylistQueue(){
+	queue.show();
+	playlist.show();
+	return true;
 }
-//setInterval( notifyOpener, 500 );
+
+//$.periodic( checkPlaylistQueue, { frequency: 1 } );
 
 jQuery(document).ready(function(){
+
+	// initialise our cookie playlists
+	queue = $.cookiePlaylist.initialise( 'audio_playlist_queue' );
+	playlist 	= $.cookiePlaylist.initialise();
 
 	// register our cleanup function
 	// do stuff when the play window is closed
