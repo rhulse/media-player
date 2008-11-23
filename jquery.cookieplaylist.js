@@ -18,9 +18,9 @@
 	var DEBUG = 1;
 
 	var playlist = new Array();
-	
+
 	var cookie_name = 'audio_playlist';
-	
+
 	var paused_at = 0;
 
   // Public Variables and Methods
