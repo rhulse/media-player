@@ -9,6 +9,8 @@
 
 	based in part on Popupwindow plugin for jQuery by Tony Petruzzi, homepage: http://rip747.wordpress.com
 
+	required plugins: cookie, cookieplaylist
+
 */
 
 (function($) {
@@ -16,8 +18,8 @@
 
     var settings = $.extend({}, $.fn.attachPlayerPopup.defaults, options);
 
-
-		//alert($.fn.attachPlayerPopup.prototype.PLAYER)
+		// set up the cookie playlist manager
+		$.cookiePlaylist.initialise();
 
     return this.each(function() {
 
@@ -31,14 +33,24 @@
 
 	    $(this).click(function(event) {
 				event.preventDefault();
-				$.fn.attachPlayerPopup.prototype.doPopup(settings.play_url, 'AudioPlayerPopUp', parameters);
+				// Assemble the custom params we want to send to the player.
+				// this will changed based on the specific application
+				// i.e. you put your stuff here
+
+				var id = this.id.split( "_" )[1] || 0;
+
+				var metadata = {
+					id: id
+				};
+
+				$.fn.attachPlayerPopup.prototype.doPopup(settings.play_url, metadata, 'AudioPlayerPopUp', parameters);
 			});
 
   	});
 
 	}
 
-  $.fn.attachPlayerPopup.prototype.doPopup = function( url, name, params ){
+  $.fn.attachPlayerPopup.prototype.doPopup = function( url, metadata, name, params ){
 
 		/*
 			There are two ways to test for the existence of the audio player window.
@@ -71,7 +83,6 @@
 		// a value of 0 means there is no player yet.
 		var player_age = current_timestamp - player_timestamp;
 
-
 		try{
 	   	if ( player_age > 7200 || player_age == 0 ) {
 				// CASE 3 & 4
@@ -92,10 +103,12 @@
 				}
 				else{
 					// allow for closed state
+					add_to_playlist( metadata.id );
 				}
 			}
 			else{
 				// player open but disconnected.
+				add_to_playlist( metadata.id );
 			}
 		}
 		catch(ex){
@@ -116,6 +129,12 @@
 		center		: 1, 		// should we center the window? {1 (YES) or 0 (NO)}. overrides top and left
 		location	: 0, 		// determines whether the address bar is displayed {1 (YES) or 0 (NO)}.
 		menubar		: 0 		// determines whether the menu bar is displayed {1 (YES) or 0 (NO)}.
+	}
+
+	function add_to_playlist( id ) {
+		if( id ) {
+			$.cookiePlaylist.add( id );
+		}
 	}
 
 })(jQuery);
