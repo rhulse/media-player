@@ -56,7 +56,9 @@
 
 		this.pop = function(){
 			this.load();
-			return this.playlist.pop;
+			id = this.playlist.pop();
+			this.save();
+			return id;
 		};
 
 		this.save = function(){
