@@ -19,7 +19,7 @@
     var settings = $.extend({}, $.fn.attachPlayerPopup.defaults, options);
 
 		// set up the cookie playlist manager
-		$.cookiePlaylist.initialise();
+		$.cookiePlaylist.initialise( 'audio_playlist_queue');
 
     return this.each(function() {
 
