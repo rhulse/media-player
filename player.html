@@ -11,6 +11,14 @@
 <script type="text/javascript" src="jquery.cookie.js "></script>
 <script type="text/javascript">
 
+function hi(){
+	alert("HI")
+}
+
+function notifyOpener(){
+	console.log(self.opener)
+}
+//setInterval( notifyOpener, 500 );
 
 jQuery(document).ready(function(){
 
@@ -33,7 +41,9 @@ jQuery(document).ready(function(){
 		Apart from saving on traffic, this will allow a future playlist
 		functionality to work correctly.
 	*/
-	$.cookie('audioPlayerOpen', 'open', 1);
+	var time = new Date();
+	var now = Math.floor(time.getTime()/1000);
+	$.cookie('audioPlayerOpen', now, 1);
 
 	// events must always come first as DOM elements could be updated from the initialise function
 	// e.g. the time and volume DOM containers
