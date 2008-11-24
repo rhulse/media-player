@@ -54,11 +54,22 @@
 			this.save();
 		};
 
+		this.push = function(id){
+			this.add(id);
+		};
+
 		this.pop = function(){
 			this.load();
 			id = this.playlist.pop();
 			this.save();
 			return id;
+		};
+
+		this.shift = function(){
+			this.load();
+			id = this.playlist.shift();
+			this.save();
+			return id;	
 		};
 
 		this.save = function(){
