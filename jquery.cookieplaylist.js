@@ -78,7 +78,7 @@
 		};
 
 		this.save = function(){
-			$.cookie( this.cookie_name, this.playlist.join(), {duration: this.max_age} );
+			$.cookie( this.cookie_name, this.playlist.join(), {path: '/', expires: this.max_age} );
 			// console.log("playlist: saved playlist - " + playlist);
 		};
 
