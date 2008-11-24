@@ -14,12 +14,13 @@
 */
 
 (function($) {
+
+	// set up the cookie playlist manager
+	var playlist_queue = $.cookiePlaylist.initialise('audio_playlist_queue');
+
   $.fn.attachPlayerPopup = function(options) {
 
     var settings = $.extend({}, $.fn.attachPlayerPopup.defaults, options);
-
-		// set up the cookie playlist manager
-		$.cookiePlaylist.initialise( 'audio_playlist_queue');
 
     return this.each(function() {
 
@@ -133,7 +134,8 @@
 
 	function add_to_playlist( id ) {
 		if( id ) {
-			$.cookiePlaylist.add( id );
+			playlist_queue.add( id );
+			// playlist_queue.show();
 		}
 	}
 

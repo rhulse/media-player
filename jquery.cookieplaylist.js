@@ -69,7 +69,12 @@
 			this.load();
 			id = this.playlist.shift();
 			this.save();
-			return id;	
+			return id;
+		};
+
+		this.count = function(){
+			this.load();
+			return this.playlist.length;
 		};
 
 		this.save = function(){
