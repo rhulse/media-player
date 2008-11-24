@@ -88,7 +88,7 @@ project at: http://github.com/rhulse/audio-player--using-javascript-/wikis/home
 RELEASES
 ==================
 
-# 0.24 (20 Nov 2008) 
+# 0.20 (24 Nov 2008) 
 
 Added a popup (new browser window) version of the player which can pass data from the main site window to the player. 
 
