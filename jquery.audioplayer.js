@@ -216,6 +216,10 @@
 		if ( 'volume' in audio_elements[0] && $.browser.mozilla ){
 			// a single element is used at the moment.
 			OGG = audio_elements[0];
+			// attach our events
+			$(document).bind('ended', function(e, m){
+				$.audioPlayer.events.onSoundComplete();
+			});
 		}
 		update_position();
 	}
