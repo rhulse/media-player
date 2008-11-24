@@ -89,12 +89,13 @@ const PLAYLIST_HREF = 2;
 		var player_age = current_timestamp - player_timestamp;
 
 		// add the item to the playlist queue which works for all cases
-		add_to_playlist( metadata );
+		//add_to_playlist( metadata );
 
 		// then do explicit handling as required
 		try{
 	   	if ( player_age > 7200 || player_age == 0 ) {
 				// CASE 3 & 4
+				playlist_queue.clear();
 				// if PLAYER is not open or has expired (2 hours) then open a new one
 				PLAYER = window.open( url, name, params );
 				if( PLAYER ) {
@@ -113,6 +114,10 @@ const PLAYLIST_HREF = 2;
 		catch(ex){
 			// some unexpected error
 		}
+		if( metadata ) {
+			playlist_queue.add( metadata );
+			// playlist_queue.show();
+		}
 	}
 
   $.fn.attachPlayerPopup.defaults = {
@@ -129,13 +134,6 @@ const PLAYLIST_HREF = 2;
 		center		: 1, 		// should we center the window? {1 (YES) or 0 (NO)}. overrides top and left
 		location	: 0, 		// determines whether the address bar is displayed {1 (YES) or 0 (NO)}.
 		menubar		: 0 		// determines whether the menu bar is displayed {1 (YES) or 0 (NO)}.
-	}
-
-	function add_to_playlist( id ) {
-		if( id ) {
-			playlist_queue.add( id );
-			// playlist_queue.show();
-		}
 	}
 
 })(jQuery);
