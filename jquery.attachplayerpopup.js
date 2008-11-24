@@ -13,6 +13,10 @@
 
 */
 
+// the mode to determine what is sent to the playlist
+const PLAYLIST_ID 	= 1;
+const PLAYLIST_HREF = 2;
+
 (function($) {
 
 	// set up the cookie playlist manager
@@ -34,15 +38,15 @@
 
 	    $(this).click(function(event) {
 				event.preventDefault();
-				// Assemble the custom params we want to send to the player.
-				// this will changed based on the specific application
-				// i.e. you put your stuff here
 
-				var id = this.id.split( "_" )[1] || 0;
+				var metadata;
 
-				var metadata = {
-					id: id
-				};
+				if ( settings.mode == PLAYLIST_HREF ) {
+					metadata = this.href;
+				}
+				else {
+					metadata = this.id.split( "_" )[1] || 0;
+				}
 
 				$.fn.attachPlayerPopup.prototype.doPopup(settings.play_url, metadata, 'AudioPlayerPopUp', parameters);
 			});
@@ -85,7 +89,7 @@
 		var player_age = current_timestamp - player_timestamp;
 
 		// add the item to the playlist queue which works for all cases
-		add_to_playlist( metadata.id );
+		add_to_playlist( metadata );
 
 		// then do explicit handling as required
 		try{
@@ -112,6 +116,7 @@
 	}
 
   $.fn.attachPlayerPopup.defaults = {
+		mode			: PLAYLIST_ID,
 		play_url	: 'player.html',
 		height		: 500, 	// sets the height in pixels of the window.
 		width			: 550, 	// sets the width in pixels of the window.
