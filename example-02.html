@@ -6,14 +6,16 @@
 <style type="text/css" media="screen">
  @import 'example.css';
 </style>
+<!-- this need to be in this order -->
 <script type="text/javascript" src="jquery-1.2.6.min.js "></script>
-<script type="text/javascript" src="jquery.attachplayerpopup.js "></script>
 <script type="text/javascript" src="jquery.cookie.js "></script>
+<script type="text/javascript" src="jquery.cookieplaylist.js "></script>
+<script type="text/javascript" src="jquery.attachplayerpopup.js "></script>
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
 
-	$('dl.audio a').attachPlayerPopup();
+	$('dl.audio a').attachPlayerPopup( { play_url: 'player-02.html' } );
 
 })
 
@@ -22,11 +24,24 @@ jQuery(document).ready(function(){
 <body>
 	<h1>Audio Player - Popup demo</h1>
 	<dl class="audio">
-		<dt><a href="robot2.mp3">This is an audio link</a></dt>
-		<dd>And this is the description of the audio item it is a bit longer</dd>
-		<dt><a href="robot2.mp3">This is an audio link</a></dt>
-		<dd>And this is the description of the audio item it is a bit longer</dd>
+	 <dt><em>08:12 </em><a title="Listen to Audio" id="audio_1790855" href="/audio/national/sat/2008/11/22/raj_nahnavolunteering_for_obama">Raj Nahna:volunteering for Obama</a></dt>
+	 <dd>Wellingtonian who quit his legal job to volunteer ar a policy analyst in Missouri rof the Democratic presdential campaign <span class="dur">(<span class="hide">duration: </span>14′13″)</span></dd>
+	 <dt><em>08:30 </em><a title="Listen to Audio" id="audio_1790858" href="/audio/national/sat/2008/11/22/barbara_anderson__a_life_in_words">Barbara Anderson : a life in words</a></dt>
+	 <dd>New Zealand author who had her first book published when she was 63,and has since enjoyed internatoinal success as a writer <span class="dur">(<span class="hide">duration: </span>22′06″)</span></dd>
+	 <dt><em>09:05 </em><a title="Listen to Audio" id="audio_1790859" href="/audio/national/sat/2008/11/22/sir_roger_moore__being_007">Sir Roger Moore : being 007</a></dt>
+	 <dd>TV and movie star( The Saint,James Bond ),who was awarded a knighthood for his work for UNICEF <span class="dur">(<span class="hide">duration: </span>36′28″)</span></dd>
+	 <dt><em>09:45 </em><a title="Listen to Audio" id="audio_1790862" href="/audio/national/sat/2008/11/22/art_with_mary_kisler__enchanted_gardens">Art with Mary Kisler : enchanted gardens</a></dt>
+	 <dd>The Mackelvie Curator of International  Art at the Auckland Art Gallery discusses upcoming exhibition The Enchanted garden <span class="dur">(<span class="hide">duration: </span>12′10″)</span></dd>
+	 <dt><em>10:06 </em><a title="Listen to Audio" id="audio_1790865" href="/audio/national/sat/2008/11/22/caitlin_smith__singing_007">Caitlin Smith : singing 007</a></dt>
+	 <dd>Jazz singer and vocal coach who will perform at the showcase event The Music is Bond;James Bond <span class="dur">(<span class="hide">duration: </span>27′13″)</span></dd>
+	 <dt><em>10:40 </em><a title="Listen to Audio" id="audio_1790885" href="/audio/national/sat/2008/11/22/the_old_spice_boys__comic_swing">The Old Spice Boys : comic swing</a></dt>
+	 <dd>Australian trio ( ukulele,snare drum,tea chest bass) touring New Zealand and playing at the second NZ Ukulele Festival <span class="dur">(<span class="hide">duration: </span>15′53″)</span></dd>
+	 <dt><em>11:10 </em><a title="Listen to Audio" id="audio_1790888" href="/audio/national/sat/2008/11/22/food_with_jennifer_mclagan__eating_fat">Food with Jennifer McLagan : eating fat</a></dt>
+	 <dd>Chef,food stylist and writer whose new book is called Fat;an appreciation of a Misunderstood Ingredient,with recipes <span class="dur">(<span class="hide">duration: </span>26′37″)</span></dd>
+	 <dt><em>11:40 </em><a title="Listen to Audio" id="audio_1790890" href="/audio/national/sat/2008/11/22/childrens_books_with_kate_de_goldi">Children's Books with Kate De Goldi</a></dt>
+	 <dd>Kate De Goldi discusses new books by Gavin Bishop,Dylan Owen,Martin Bailey andJ.L.Brisley <span class="dur">(<span class="hide">duration: </span>14′08″)</span></dd>
+	 <dt><em>11:40 </em><a title="Listen to Audio" id="audio_1790889" href="/audio/national/sat/2008/11/22/e-mails">E-mails</a></dt>
+	 <dd>Kim reads out your emails <span class="dur">(<span class="hide">duration: </span>4′49″)</span></dd>
 	</dl>
-
 </body>
 </html>
