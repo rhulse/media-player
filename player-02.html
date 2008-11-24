@@ -41,7 +41,7 @@ jQuery(document).ready(function(){
 	// register our cleanup function
 	// do stuff when the play window is closed
 	$(window).unload( function () {
-		$.cookie('audioPlayerOpen', null);
+		$.cookie('audioPlayerOpen', null, {path: '/'});
 	});
 
 	/*
