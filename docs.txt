@@ -29,6 +29,20 @@ Example 01
 
 This is a plain old player that show the basic functionality of the module
 
+Example 02
+
+This has a main window which pops up the player in a second window. It assumes that only an ID is required by the player, and that the player will go and fetch the data from somewhere (via ajax, for example).
+
+Does not do anything else yet... 
+
+Example 03
+
+This opens the audio in the popup window and plays it. Simple and Easy.
+
+It works by attaching a popup event to all audio links on the page, and sending the full file path to the player.
+
+You can have MP3 and Vorbis links on the same page and they'll play (in Firefox 3.1).
+
 
 ==================
 Files included
@@ -41,12 +55,17 @@ Flash files:
  expressInstall.swf
 
 Example files:
- example.html
+ example-01.html
+ example-02.html
+ example-03.html
  example.css
 
-The plugin:
+The plugins:
+ jquery.cookie.js
+ jquery.cookieplaylist.js
+ jquery.attacheplayerpopup.js
  jquery.audioplayer.js
-
+ 
 Graphics
  Play Icons.png (An Adobe Fireworks file)
  play-icons.png
@@ -69,7 +88,19 @@ project at: http://github.com/rhulse/audio-player--using-javascript-/wikis/home
 RELEASES
 ==================
 
-# 0.11 (20 Nov 2008, later today) 
+# 0.24 (20 Nov 2008) 
+
+Added a popup (new browser window) version of the player which can pass data from the main site window to the player. 
+
+This is done via a shared cookie-based queue. The point is so users can move from page to page, click on several audio items, and for those to be added to the floating player window.
+
+There are two axample of this. 
+
+Example 02 sends the id attribute from the audio link to player (for the player to handle in some way).
+
+Example 03 sends the href (the link to the audio) to the player. The audio plays right away.
+
+# 0.11 (20 Nov 2008) 
 
 A bunch of small improvements to ensure the plugin API is stable under all conditions, and a new parameter that can be used during the initialisation phase to not load flash (for people who want to stick to free software). Also implemented the new type attribute in the audio tag.
 
