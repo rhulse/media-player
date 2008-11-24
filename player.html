@@ -18,17 +18,19 @@ var queue;
 // the playlist holds the real current playlist
 var playlist;
 
-function updatePlaylist(){
+function updatePlaylist( id ){
 	// shell function
+	console.log( 'item for list: ' + id );
 }
 
 function checkPlaylistQueue(){
-	queue.show();
-	playlist.show();
+	if( queue.count() ){
+		updatePlaylist( queue.pop() );
+	}
 	return true;
 }
 
-//$.periodic( checkPlaylistQueue, { frequency: 1 } );
+$.periodic( checkPlaylistQueue, { frequency: 1 } );
 
 jQuery(document).ready(function(){
 
