@@ -92,15 +92,16 @@
 				if( PLAYER ) {
 					PLAYER.focus();
 					$(window).data( 'player', PLAYER );
+					add_to_playlist( metadata.id );
 				}
 	    }
 			else if( PLAYER ){
 				// CASE 1 & 2
 				// the PLAYER window exists and is attached
-				// we can send talk directly and then focus
+				// TODO: This whoe section can probably be simplified to a single call to add_to_playlist
 				if( ! PLAYER.closed ){
 					PLAYER.focus();
-					PLAYER.updatePlaylist();
+					add_to_playlist( metadata.id );
 				}
 				else{
 					// allow for closed state
