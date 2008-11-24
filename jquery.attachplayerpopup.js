@@ -84,6 +84,10 @@
 		// a value of 0 means there is no player yet.
 		var player_age = current_timestamp - player_timestamp;
 
+		// add the item to the playlist queue which works for all cases
+		add_to_playlist( metadata.id );
+
+		// then do explicit handling as required
 		try{
 	   	if ( player_age > 7200 || player_age == 0 ) {
 				// CASE 3 & 4
@@ -92,25 +96,14 @@
 				if( PLAYER ) {
 					PLAYER.focus();
 					$(window).data( 'player', PLAYER );
-					add_to_playlist( metadata.id );
 				}
 	    }
 			else if( PLAYER ){
 				// CASE 1 & 2
 				// the PLAYER window exists and is attached
-				// TODO: This whoe section can probably be simplified to a single call to add_to_playlist
 				if( ! PLAYER.closed ){
 					PLAYER.focus();
-					add_to_playlist( metadata.id );
 				}
-				else{
-					// allow for closed state
-					add_to_playlist( metadata.id );
-				}
-			}
-			else{
-				// player open but disconnected.
-				add_to_playlist( metadata.id );
 			}
 		}
 		catch(ex){
