@@ -8,6 +8,7 @@
 </style>
 <script type="text/javascript" src="jquery-1.2.6.min.js "></script>
 <script type="text/javascript" src="jquery.audioplayer.js "></script>
+<script type="text/javascript" src="jquery.fdslider.js "></script>
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
@@ -33,6 +34,10 @@ jQuery(document).ready(function(){
 
 	$(document).bind('soundPositionChange', function(e, m){
 		$(".seconds").html( m.position );
+		console.log(m.permille);
+		$("#percentage").attr( 'value', m.permille);
+		// tell the slider controller to update
+		fdSliderController.onload();
 	});
 
 
@@ -103,6 +108,12 @@ jQuery(document).ready(function(){
 		  	<li><input type="image" alt="Louder" src="0.gif" id="louder"/></li>
 	  	</ul>
 		</div>
+
+		<div id="slider-wrapper">
+	    <label for="percentage" id="percentageLabel" class="hide">Position Sider Range: 0 - 100</label>
+	    <input name="percentage" id="percentage" type="text" title="Range: 0 - 100" class="fd_slider fd_tween fd_range_0_1000 fd_hide_input" value="0"  maxlength="3" />
+		</div>
+
 	</div>
 
 	<div id="volume">
