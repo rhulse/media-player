@@ -205,7 +205,7 @@ var fdSliderController;
                 // Opera doesn't let us cancel key events so the up/down arrows and home/end buttons will scroll the screen - which sucks
                 return self.events.stopevent(e);
             },
-            onchange: function(e) { console.log("change")
+            onchange: function(e) {
                 self.resetHandlePosition();
                 self.doCallback();
                 return true;

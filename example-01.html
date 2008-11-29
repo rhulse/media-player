@@ -34,7 +34,6 @@ jQuery(document).ready(function(){
 
 	$(document).bind('soundPositionChange', function(e, m){
 		$(".seconds").html( m.position );
-		console.log(m.permille);
 		$("#percentage").attr( 'value', m.permille);
 		// tell the slider controller to update
 		fdSliderController.onload();
