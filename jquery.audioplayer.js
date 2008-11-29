@@ -58,7 +58,7 @@
 	var ignore_flash = false;
 
 	// this is how often to update the position count (in seconds)
-	var udpate_position_interval = 1.0;
+	var udpate_position_interval = 0.1;
 
 	// a place to save the first command if we have to wait for the flash object to load
 	var saved_cmd = [];
@@ -123,6 +123,10 @@
 
 		getVolume: function() {
 			return audio.volume;
+		},
+
+		getDuration: function() {
+			return audioCommand( 'duration' );
 		},
 
 		isPlaying: function() {
@@ -270,6 +274,9 @@
 											e.onSoundVolume();
 											break;
 
+			case 'duration'		: return (SWF.getDuration(audio.current_url) / 1000 ) || 0;
+											break;
+
 			case 'elapsedTime' : // flash does not return 0 for position if player is stopped. Annoying
 											return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
 											break;
@@ -310,6 +317,9 @@
 											e.onSoundVolume();
 											break;
 
+			case 'duration'		: return OGG.duration || 0;
+											break;
+
 			case 'elapsedTime' : // this is the current seeked to time
 											return OGG.currentTime;
 											break
@@ -327,8 +337,14 @@
 	}
 
 	function update_position() {
-		position = formatTime( current_position() );
-		sendEvent( "soundPositionChange", { position: position });
+		var position = current_position();
+		var readable_position = formatTime(position);
+    var duration = audioCommand('duration') || 0;
+		// per thousand (duration divided into 1000 bits)
+    var permille = (( position / duration ) * 1000) || 0;
+		permille = Math.floor(permille); //round(permille*100)/100
+
+		sendEvent( "soundPositionChange", { position: readable_position, permille : permille });
 	}
 
 	function current_position() {
