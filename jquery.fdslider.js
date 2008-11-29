@@ -190,6 +190,9 @@ var fdSliderController = (function() {
         var resize = function(e) {
                 for(slider in sliders) { sliders[slider].onResize(); };        
         };                 
+        var refresh = function(e) {
+                for(slider in sliders) { sliders[slider].reset(); };
+        };
         var removeOnloadEvent = function() {
                 removeEvent(window, "load", init);
                 /*@cc_on@*/
@@ -737,6 +740,7 @@ var fdSliderController = (function() {
                         destroyAll:             function() { destroyAllsliders(); },
                         destroySlider:          function(id) { return destroySingleSlider(id); },
                         redrawAll:              function() { resize(); },
+                        refresh:              	function() { refresh(); },
                         increment:              function(id, numSteps) { if(!(id in sliders)) { return false; }; sliders[id].increment(numSteps); },
                         addEvent:               addEvent,
                         removeEvent:            removeEvent,
