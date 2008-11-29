@@ -34,11 +34,13 @@ jQuery(document).ready(function(){
 
 	$(document).bind('soundPositionChange', function(e, m){
 		$(".seconds").html( m.position );
-		$("#percentage").attr( 'value', m.permille);
-		// tell the slider controller to update
-		fdSliderController.onload();
+		$("#percentage").attr( 'value', m.permille)
+		fdSliderController.refresh();
 	});
 
+	function sliderseek(){
+		console.log('seek');
+	}
 
 	$.audioPlayer.initialise( {
 			mp3Player			: "audioplayer.swf",
@@ -110,7 +112,7 @@ jQuery(document).ready(function(){
 
 		<div id="slider-wrapper">
 	    <label for="percentage" id="percentageLabel" class="hide">Position Sider Range: 0 - 100</label>
-	    <input name="percentage" id="percentage" type="text" title="Range: 0 - 100" class="fd_slider fd_tween fd_range_0_1000 fd_hide_input" value="0"  maxlength="3" />
+	    <input name="percentage" id="percentage" type="text" title="Range: 0 - 100" class="fd_slider fd_tween fd_range_0_1000 fd_hide_input fd_callback_move_sliderseek" value="0"  maxlength="3" />
 		</div>
 
 	</div>
