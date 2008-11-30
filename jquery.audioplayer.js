@@ -247,7 +247,7 @@
 		var e = $.audioPlayer.events;
 
 		switch( cmd ) {
-			case 'load' 	:
+			case 'load' 	: SWF.preloadSound(audio.current_url);
 											break;
 
 			case 'play' 	: SWF.startSound( audio.current_url, audio.current_pos, audio.volume, audio.pan );
