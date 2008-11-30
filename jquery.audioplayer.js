@@ -48,9 +48,10 @@
 				// so we track the state and return 0 instead of the (apparently) wrong flash value
 				// also means the plugin works the same for <audio> and flash implementations
 				playing : false,
-				paused_at : 0,
+				// times are stored in seconds
+				time_paused_at : 0,
+				time_current : 0,
 				current_url : '',
-				current_pos : 0
 	};
 
 	// Set to true if you want to only use the <audio> tag
@@ -92,7 +93,7 @@
 
 		play: function( position ) {
 			// do we resume or start at the stated position
-			audio.current_pos = (audio.paused_at) ? audio.paused_at : position;
+			audio.time_current = (audio.time_paused_at) ? audio.time_paused_at : position;
 			audioCommand( 'play' );
 		},
 
@@ -129,7 +130,7 @@
 		},
 
 		isPaused: function() {
-			return ( audio.paused_at > 0 ) ? true : false;
+			return ( audio.time_paused_at > 0 ) ? true : false;
 		},
 
 		isStopped: function() {
@@ -250,17 +251,18 @@
 			case 'load' 	: SWF.preloadSound(audio.current_url);
 											break;
 
-			case 'play' 	: SWF.startSound( audio.current_url, audio.current_pos, audio.volume, audio.pan );
+			case 'play' 	: SWF.startSound( audio.current_url, (audio.time_current * 1000), audio.volume, audio.pan );
 											e.onSoundPlay();
 											break;
 
 			case 'stop' 	: SWF.stopSound( audio.current_url );
-											audio.paused_at = 0;
+											audio.time_paused_at = 0;
 											e.onSoundStop();
 											break;
 
 			case 'pause'	:	SWF.stopSound( audio.current_url );
-											audio.paused_at = SWF.getPosition( audio.current_url ) || audio.paused_at;
+											audio.time_paused_at = ( SWF.getPosition( audio.current_url ) / 1000) || audio.time_paused_at;
+											console.log ( audio.time_paused_at)
 											e.onSoundPause();
 											break;
 
@@ -295,12 +297,12 @@
 			case 'stop' 	: OGG.pause();
 											// this is really a seek
 											OGG.currentTime = 0;
-											audio.paused_at = 0;
+											audio.time_paused_at = 0;
 											e.onSoundStop();
 											break;
 
 			case 'pause'	:	OGG.pause();
-											audio.paused_at = OGG.currentTime;
+											audio.time_paused_at = OGG.currentTime;
 											e.onSoundPause();
 											break;
 
