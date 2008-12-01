@@ -21,6 +21,9 @@
 
         * For any reuse or distribution, you must make clear to others the license terms of this work.
         * Any of these conditions can be waived if you get permission from the copyright holder.
+
+				Modifications (c) 2008 Richard Hulse (marked with RH).
+				Released under the same terms as above.
 */
 
 var fdSliderController = (function() {
@@ -188,8 +191,10 @@ var fdSliderController = (function() {
                 removeOnloadEvent();
         };                  
         var resize = function(e) {
-                for(slider in sliders) { sliders[slider].onResize(); };        
-        };                 
+                for(slider in sliders) { sliders[slider].onResize(); };
+        };
+
+				// RH: force and update of the slider position
         var refresh = function(e) {
                 for(slider in sliders) { sliders[slider].reset(); };
         };
@@ -512,7 +517,14 @@ var fdSliderController = (function() {
                         var value = tagName == "input" ? parseFloat(inp.value) : inp.selectedIndex;
                         if(isNaN(value) || value < Math.min(min,max)) value = Math.min(min,max);  
                         value += inc * numOfSteps;
-                        valueToPixels(value);                                               
+                        valueToPixels(value);
+                };
+
+ 								// RH: Set the slider handle to a specific value
+               function setHandle(position) {
+                        if( (position <= max) && (position >= min) ) {
+	                        valueToPixels(position);
+												}
                 };
                 
                 function snapToNearestValue(px) {
@@ -605,7 +617,23 @@ var fdSliderController = (function() {
                         updateAriaValues();                        
                         callback("update");
                 };
-                
+
+								/*
+									RH: Dynamically change the slider max value and redraw it.
+									This is useful if you have one slider that is used for something
+									like and audio playlist, and you want to have duration of the clip
+									driving the slider (and not percentage).
+								*/
+
+                function setMaxValue(val) {
+													max 	= val;
+													range = Math.abs(max - min)
+													steps = Math.ceil(range / inc)
+	                        handle.setAttribute("aria-valuemax",  max);
+													updateAriaValues();
+													redraw();
+								};
+
                 function findLabel() {
                         var label;
                         if(inp.parentNode && inp.parentNode.tagName.toLowerCase() == "label") label = inp.parentNode;
@@ -720,7 +748,10 @@ var fdSliderController = (function() {
                         onResize:       function(e) { if(outerWrapper.offsetHeight != sliderH || outerWrapper.offsetWidth != sliderW) { redraw(); }; },
                         destroy:        function()  { destroySlider(); },
                         reset:          function()  { valueToPixels(); },
-                        increment:      function(n) { incrementHandle(n); }
+                        increment:   		function(n) { incrementHandle(n); },
+												// RH: extra methods exposed
+                        setPosition:    function(n) { setHandle(n); },
+                        setMax:    			function(n) { setMaxValue(n); }
                 };
         }; 
            
@@ -746,7 +777,11 @@ var fdSliderController = (function() {
                         removeEvent:            removeEvent,
                         stopEvent:              stopEvent,
                         disableMouseWheel:      function() { removeMouseWheelSupport(); },
-                        removeOnLoadEvent:      function() { removeOnloadEvent(); }                      
+                        removeOnLoadEvent:      function() { removeOnloadEvent(); },
+												// RH: new methods exposed
+                        setPosition:            function(id, pos) { if(!(id in sliders)) { return false; }; sliders[id].setPosition(pos); },
+                        setMax:            			function(id, val) { if(!(id in sliders)) { return false; }; sliders[id].setMax(val); },
+                        refresh:              	function() { refresh(); },
         }
 })();             
                        
