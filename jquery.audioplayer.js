@@ -164,7 +164,7 @@
 					});
 					saved_cmd = [];
 				}
-				update_position();
+				update_controls();
 			},
 
 			onSoundLoaded: function() {
@@ -174,7 +174,7 @@
 			onSoundStop: function() {
 				audio.playing = false;
 				sendEvent( "soundStop" );
-				update_position();
+				update_controls();
 			},
 
 			onSoundPause: function() {
@@ -193,7 +193,7 @@
 
 			onSoundPosition: function() {
 				if( audio.playing ){
-					update_position();
+					update_controls();
 				}
 				return true;
 			}
@@ -234,7 +234,7 @@
 			});
 
 		}
-		update_position();
+		update_controls();
 	}
 
 	function audioCommand( cmd ) {
@@ -344,15 +344,17 @@
 		$(document).trigger( event, params )
 	}
 
-	function update_position() {
+	function update_controls() {
+		update_sound_timer();
+		update_sound_slider();
+	}
+
+	function update_sound_timer( postion, duration ) {
 		var position = current_position();
 		var readable_position = formatTime(position);
-    var duration = audioCommand('duration') || 0;
-		// per thousand (duration divided into 1000 bits)
-    var permille = (( position / duration ) * 1000) || 0;
-		permille = Math.floor(permille); //round(permille*100)/100
 
-		sendEvent( "soundPositionChange", { position: readable_position, permille : permille });
+		sendEvent( "soundTimerChange", { position: readable_position });
+	}
 	}
 
 	function current_position() {
