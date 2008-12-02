@@ -167,6 +167,10 @@
 				update_position();
 			},
 
+			onSoundLoaded: function() {
+				sendEvent( "soundLoaded" );
+			},
+
 			onSoundStop: function() {
 				audio.playing = false;
 				sendEvent( "soundStop" );
