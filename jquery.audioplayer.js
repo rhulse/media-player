@@ -229,6 +229,10 @@
 			$(document).bind('ended', function(e, m){
 				$.audioPlayer.events.onSoundComplete();
 			});
+			$(document).bind('loadedmetadata', function(e, m){
+				$.audioPlayer.events.onSoundLoaded();
+			});
+
 		}
 		update_position();
 	}
