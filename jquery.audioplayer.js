@@ -52,6 +52,10 @@
 				time_paused_at : 0,
 				time_current : 0,
 				current_url : '',
+				// values for seek tracking
+				seeking : false,
+				seek_pos_current : 0,
+				seek_pos_prev : 0
 	};
 
 	// Set to true if you want to only use the <audio> tag
@@ -127,6 +131,24 @@
 
 		getDuration: function() {
 			return audioCommand( 'duration' );
+		},
+
+		seekTo: function(pos_in_secs) {
+			// save the current postion
+			audio.seek_pos_current = pos_in_secs;
+			if( ! audio.seeking ){
+				// if we are not seeking then pause and setup our function
+				audio.seeking = true;
+				console.log("seeking")
+
+				if( this.isPlaying() ){
+					audioCommand('pause');
+				}
+				// the seekMonitor checks to see if seeking has completed and
+				// then restarts the player. The delay is to allow keyboard
+				// users a chance to nudge the value
+				$.periodic( seekMonitor, { frequency : 1.0 } );
+			}
 		},
 
 		isPlaying: function() {
@@ -305,7 +327,8 @@
 											OGG.muted = false;
 											break;
 
-			case 'play' 	: OGG.play();
+			case 'play' 	: OGG.currentTime = audio.time_current;
+											OGG.play();
 											e.onSoundPlay();
 											break;
 
@@ -313,6 +336,7 @@
 											// this is really a seek
 											OGG.currentTime = 0;
 											audio.time_paused_at = 0;
+											audio.time_current = 0;
 											e.onSoundStop();
 											break;
 
@@ -355,6 +379,45 @@
 
 		sendEvent( "soundTimerChange", { position: readable_position });
 	}
+
+	function update_sound_slider() {
+		var position = current_position();
+		position = Math.floor(position);
+
+		sendEvent( "soundSliderChange", { position : position });
+	}
+
+	function seekMonitor(){
+		/*
+			this is set up at the start of a seek operation to monitor
+			the seek is stable. THis is to stop lots of seeks
+			being sent until the slider has stopped moving
+		*/
+  	var duration = audioCommand('duration') || 0;
+		duration = Math.floor(duration);
+
+		if( audio.seek_pos_current >= duration ) {
+			// cannot seek past the end
+			audio.seeking = false;
+			audio.time_current = 0;
+			audio.time_paused_at = 0;
+			audioCommand('stop');
+			return false;
+		}
+
+		if( audio.seek_pos_current == audio.seek_pos_prev ) {
+			audio.seeking = false;
+
+			audio.time_current = audio.time_paused_at = audio.seek_pos_current;
+
+			audioCommand('play');
+			// returning false stop the periodic
+			return false;
+		}
+		else{
+			audio.seek_pos_prev = audio.seek_pos_current;
+			return true;
+		}
 	}
 
 	function current_position() {
