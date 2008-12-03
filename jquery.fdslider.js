@@ -590,7 +590,7 @@ var fdSliderController = (function() {
                 function pixelsToValue(px) {
                         handle.style[vertical ? "top" : "left"] = px + "px";
                         var val = min + (Math.round(px / stepPx) * inc);
-                         ((tagName == "select" || inc == 1) ? Math.round(val) : val);
+                        setInputValue((tagName == "select" || inc == 1) ? Math.round(val) : val);
                 };
 
                 function valueToPixels(val) {
