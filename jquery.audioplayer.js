@@ -139,7 +139,6 @@
 			if( ! audio.seeking ){
 				// if we are not seeking then pause and setup our function
 				audio.seeking = true;
-				console.log("seeking")
 
 				if( this.isPlaying() ){
 					audioCommand('pause');
@@ -282,7 +281,7 @@
 		var e = $.audioPlayer.events;
 
 		switch( cmd ) {
-			case 'load' 	: SWF.preloadSound(audio.current_url);
+			case 'load' 	: //SWF.preloadSound(audio.current_url);
 											break;
 
 			case 'play' 	: SWF.startSound( audio.current_url, (audio.time_current * 1000), audio.volume, audio.pan );
@@ -296,7 +295,6 @@
 
 			case 'pause'	:	SWF.stopSound( audio.current_url );
 											audio.time_paused_at = ( SWF.getPosition( audio.current_url ) / 1000) || audio.time_paused_at;
-											console.log ( audio.time_paused_at)
 											e.onSoundPause();
 											break;
 
@@ -395,15 +393,6 @@
 		*/
   	var duration = audioCommand('duration') || 0;
 		duration = Math.floor(duration);
-
-		if( audio.seek_pos_current >= duration ) {
-			// cannot seek past the end
-			audio.seeking = false;
-			audio.time_current = 0;
-			audio.time_paused_at = 0;
-			audioCommand('stop');
-			return false;
-		}
 
 		if( audio.seek_pos_current == audio.seek_pos_prev ) {
 			audio.seeking = false;
