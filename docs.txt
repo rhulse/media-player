@@ -27,7 +27,7 @@ Add the jQuery library v 1.2.6 and an MP3 or OGG file to the working directory a
 
 Example 01
 
-This is a plain old player that show the basic functionality of the module
+This is a plain old player that show the basic functionality of the module, with a simple slider. The slider does not have the ability to seek in the audio yet
 
 Example 02
 
@@ -64,6 +64,7 @@ The plugins:
  jquery.cookie.js
  jquery.cookieplaylist.js
  jquery.attacheplayerpopup.js
+ jquery.fdslider.js
  jquery.audioplayer.js
  
 Graphics
@@ -87,6 +88,10 @@ project at: http://github.com/rhulse/audio-player--using-javascript-/wikis/home
 ==================
 RELEASES
 ==================
+
+# 0.21 (3 Dec 2008) 
+
+Added a time slider to the player. This gives a visual readout of the relative position in the file.
 
 # 0.20 (24 Nov 2008) 
 
