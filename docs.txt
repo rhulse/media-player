@@ -89,6 +89,14 @@ project at: http://github.com/rhulse/audio-player--using-javascript-/wikis/home
 RELEASES
 ==================
 
+# 0.22 (3 Dec 2008) 
+
+The time slider now will cause the player to seek when it is clicked.
+
+There are two known issues:
+* It will not seek from stop with an MP3 (ogg is OK)
+* the slider flicks back to the old value after a seek before continuing normally.
+
 # 0.21 (3 Dec 2008) 
 
 Added a time slider to the player. This gives a visual readout of the relative position in the file.
