@@ -14,7 +14,7 @@ h1{margin:10px;}
 #counter{padding:5px; margin:10px; border:1px solid gray; width:5em; text-align:right;
 	font-size:14px; font-weight:bold; background:#FFF;}
 
-#volume{ position:absolute; left: 300px; top:120px; z-index:100; font-size:14px;}
+#volume{ position:absolute; left: 300px; top:75px; z-index:100; font-size:14px;}
 
 ul{margin:5px 0 0 0;padding:0;list-style:none;}
 li{margin:0;padding:0;}
