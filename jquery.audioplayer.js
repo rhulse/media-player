@@ -58,6 +58,17 @@
 				seek_pos_prev : 0
 	};
 
+	var metadata = {
+				asset_id		: 0,
+				title				: '',
+				description	: '',
+				duration		: 0,
+				mp3_url			: '',
+				mp3_length	: 0,
+				ogg_url			: '',
+				ogg_length	: 0
+	}
+
 	// Set to true if you want to only use the <audio> tag
 	var ignore_flash = false;
 
@@ -86,8 +97,10 @@
 			$.periodic( this.events.onSoundPosition, { frequency: udpate_position_interval } );
 		},
 
-	  load: function( url ) {
-			audio.current_url = url;
+	  load: function( data ) {
+			metadata = data;
+
+			audio.current_url = metadata.mp3_url;
 			audioCommand( 'load' );
 		},
 
