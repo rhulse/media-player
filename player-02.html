@@ -10,6 +10,7 @@
 <script type="text/javascript" src="jquery.audioplayer.js "></script>
 <script type="text/javascript" src="jquery.cookieplaylist.js "></script>
 <script type="text/javascript" src="jquery.cookie.js "></script>
+<script type="text/javascript" src="jquery.fdslider.js "></script>
 <script type="text/javascript">
 
 // two playlist are iused.
@@ -80,15 +81,24 @@ jQuery(document).ready(function(){
 		alert(m.message);
 	});
 
-	$(document).bind('soundPositionChange', function(e, m){
+	$(document).bind('soundTimerChange', function(e, m){
 		$(".seconds").html( m.position );
+	});
+
+	$(document).bind('soundSliderChange', function(e, m){
+		$("#percentage").attr( 'value', m.position)
+		fdSliderController.refresh();
+	});
+
+	$(document).bind('soundLoaded', function(e, m){
+		// wait until the player has accurate information
+		fdSliderController.setMax('percentage', Math.floor($.audioPlayer.getDuration()) );
 	});
 
 	$.audioPlayer.initialise( {
 			mp3Player			: "audioplayer.swf",
 			expressPlayer	: "expressInstall.swf",
 	});
-
 
 	$('#play').click( function(){
 		if( $.audioPlayer.isPlaying()){
@@ -110,7 +120,6 @@ jQuery(document).ready(function(){
    $('#louder').click( function(){
 		$.audioPlayer.louder();
 	});
-
 
 })
 
@@ -148,6 +157,12 @@ jQuery(document).ready(function(){
 		  	<li><input type="image" alt="Louder" src="0.gif" id="louder"/></li>
 	  	</ul>
 		</div>
+		
+		<div id="slider-wrapper">
+	    <label for="percentage" id="percentageLabel" class="hide">Position Sider Range: 0 - 100</label>
+	    <input name="percentage" id="percentage" type="text" title="Range: 0 - 100" class="fd_slider fd_tween fd_range_0_180 fd_hide_input fd_slider_cb_update_sliderseek" value="0"  maxlength="3" />
+		</div>
+		
 	</div>
 
 	<div id="volume">
