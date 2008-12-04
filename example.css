@@ -21,8 +21,8 @@ li{margin:0;padding:0;}
 
 .items li span{ display:block;}
 
-span.title{font-size:1.0em;padding:0 5px; font-weight:bold;}
-span.desc{display:block; padding: 2px 5px 0 ; font-weight:normal; font-size:0.8em; }
+li h3{font-size:1.0em;padding:0 5px; font-weight:bold;}
+li p{display:block; padding: 2px 5px 0 ; font-weight:normal; font-size:0.8em; }
 
 #controls{margin:0px 10px; position:absolute;top:60px;}
 #controls li{list-style:none;display:inline;padding-right:5px;}
