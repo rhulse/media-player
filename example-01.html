@@ -57,7 +57,7 @@ jQuery(document).ready(function(){
 
 	// Add your example files here.
 	//$.audioPlayer.load( 'review.ogg');
-	$.audioPlayer.load( 'robot2.mp3');
+	$.audioPlayer.load( { mp3_url: 'robot2.mp3' } );
 
 	$('#play').click( function(){
 		if( $.audioPlayer.isPlaying()){
