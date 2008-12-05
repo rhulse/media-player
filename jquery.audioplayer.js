@@ -149,6 +149,7 @@
 		seekTo: function(pos_in_secs) {
 			// save the current postion
 			audio.seek_pos_current = pos_in_secs;
+			update_sound_timer(pos_in_secs)
 			if( ! audio.seeking ){
 				// if we are not seeking then pause and setup our function
 				audio.seeking = true;
@@ -384,8 +385,8 @@
 		update_sound_slider();
 	}
 
-	function update_sound_timer( postion, duration ) {
-		var position = current_position();
+	function update_sound_timer( set_position ) {
+		var position = set_position || current_position();
 		var readable_position = formatTime(position);
 
 		sendEvent( "soundTimerChange", { position: readable_position });
