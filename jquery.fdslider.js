@@ -130,13 +130,14 @@ var fdSliderController = (function() {
                 var ranges     = /fd_range_([-]{0,1}[0-9]+(d[0-9]+){0,1}){1}_([-]{0,1}[0-9]+(d[0-9]+){0,1}){1}/i,
                     increment  = /fd_inc_([-]{0,1}[0-9]+(d[0-9]+){0,1}){1}/,
                     kIncrement = /fd_maxinc_([-]{0,1}[0-9]+(d[0-9]+){0,1}){1}/,
+                    kbinc 		 = /fd_kbinc_([-]{0,1}[0-9]+(d[0-9]+){0,1}){1}/,
+                    kbhop			 = /fd_kbhop_([-]{0,1}[0-9]+(d[0-9]+){0,1}){1}/,
                     callbacks  = /((fd_slider_cb_(update|create|destroy|redraw|move|focus|blur)_)([^\s|$]+))/ig,
                     classnames = /(fd_slider_cn_([a-zA-Z0-9_\-]+))/ig,
                     inputs     = elem && elem.tagName && elem.tagName.search(/input|select/i) != -1 ? [elem] : joinNodeLists(document.getElementsByTagName('input'), document.getElementsByTagName('select')),
                     range,
                     tmp,
                     options;
-
                 for(var i = 0, inp; inp = inputs[i]; i++) {
                         if((inp.tagName.toLowerCase() == "input" && inp.type == "text" && (inp.className.search(ranges) != -1 || inp.className.search(/fd_slider/) != -1)) || (inp.tagName.toLowerCase() == "select" && inp.className.search(/fd_slider/) != -1)) {
                                 // If we haven't been passed a specific id and the slider exists then continue
@@ -149,6 +150,8 @@ var fdSliderController = (function() {
                                         inp:            inp,
                                         inc:            inp.className.search(increment)  != -1 ? inp.className.match(increment)[0].replace("fd_inc_", "").replace("d",".") : "1",
                                         maxInc:         inp.className.search(kIncrement) != -1 ? inp.className.match(kIncrement)[0].replace("fd_maxinc_", "").replace("d",".") : false,
+                                        kbinc:          inp.className.search(kbinc) != -1 ? inp.className.match(kbinc)[0].replace("fd_kbinc_", "").replace("d",".") : "1",
+                                        kbhop:          inp.className.search(kbhop) != -1 ? inp.className.match(kbhop)[0].replace("fd_kbhop_", "").replace("d",".") : false,
                                         range:          [0,100],
                                         callbacks:      parseCallbacks(inp.className.match(callbacks)),
                                         classNames:     parseClassNames(inp.className.match(classnames)),
@@ -213,6 +216,8 @@ var fdSliderController = (function() {
                     range       = Math.abs(max - min),
                     inc         = tagName == "select" ? 1 : +options.inc||1,
                     maxInc      = options.maxInc ? options.maxInc : inc * 2,
+                    kbinc 	    = options.kbinc ? +options.kbinc : 1,
+                    kbhop	      = options.kbhop ? +options.kbhop : kbinc * 2,
                     precision   = options.inc.search(".") != -1 ? options.inc.substr(options.inc.indexOf(".")+1, options.inc.length - 1).length : 0,
                     steps       = Math.ceil(range / inc),
                     useTween    = !!options.tween,
@@ -378,10 +383,10 @@ var fdSliderController = (function() {
 
                         if( kc == 37 || kc == 40 || kc == 46 || kc == 34) {
                                 // left, down, ins, page down
-                                value -= (e.ctrlKey || kc == 34 ? maxInc : inc)
+                                value -= (e.ctrlKey || kc == 34 ? kbhop : kbinc)
                         } else if( kc == 39 || kc == 38 || kc == 45 || kc == 33) {
                                 // right, up, del, page up
-                                value += (e.ctrlKey || kc == 33 ? maxInc : inc)
+                                value += (e.ctrlKey || kc == 33 ? kbhop : kbinc)
                         } else if( kc == 35 ) {
                                 // max
                                 value = max;
