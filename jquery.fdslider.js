@@ -785,7 +785,7 @@ var fdSliderController = (function() {
 												// RH: new methods exposed
                         setPosition:            function(id, pos) { if(!(id in sliders)) { return false; }; sliders[id].setPosition(pos); },
                         setMax:            			function(id, val) { if(!(id in sliders)) { return false; }; sliders[id].setMax(val); },
-                        refresh:              	function() { refresh(); },
+                        refresh:              	function() { refresh(); }
         }
 })();
 
