@@ -58,6 +58,10 @@
 				seek_pos_prev : 0
 	};
 
+	var interface = {
+				seeking : false,  // the slider is seeking (as distinct from the underlying player component)
+	};
+
 	var metadata = {
 				asset_id		: 0,
 				title				: '',
@@ -150,9 +154,9 @@
 			// save the current postion
 			audio.seek_pos_current = pos_in_secs;
 			update_sound_timer(pos_in_secs)
-			if( ! audio.seeking ){
+			if( ! interface.seeking ){
 				// if we are not seeking then pause and setup our function
-				audio.seeking = true;
+				interface.seeking = true;
 
 				if( this.isPlaying() ){
 					audioCommand('pause');
@@ -263,6 +267,12 @@
 			// attach our events
 			$(document).bind('ended', function(e, m){
 				$.audioPlayer.events.onSoundComplete();
+			});
+			$(document).bind('seeking', function(e, m){
+				audio.seeking = true; 
+			});
+			$(document).bind('seeked', function(e, m){
+				audio.seeking = false; 
 			});
 			$(document).bind('loadedmetadata', function(e, m){
 				$.audioPlayer.events.onSoundLoaded();
@@ -386,6 +396,10 @@
 	}
 
 	function update_sound_timer( set_position ) {
+		// stop updating if the audio is seeking
+		if( audio.seeking ){
+			return;
+		}
 		var position = set_position || current_position();
 		var readable_position = formatTime(position);
 
@@ -393,6 +407,10 @@
 	}
 
 	function update_sound_slider() {
+		// stop updating if the audio is seeking
+		if( audio.seeking ){
+			return;
+		}
 		var position = current_position();
 		position = Math.floor(position);
 
@@ -409,7 +427,7 @@
 		duration = Math.floor(duration);
 
 		if( audio.seek_pos_current == audio.seek_pos_prev ) {
-			audio.seeking = false;
+			interface.seeking = false;
 
 			audio.time_current = audio.time_paused_at = audio.seek_pos_current;
 
