@@ -27,7 +27,7 @@
 				wMode: 'transparent',
 				swLiveConnect: true
 	 		},
-			ver : "9.0.0",
+			ver : "8.0.0",
 			width : 1,
 			height: 1,
 			exp: "expressInstall.swf",
