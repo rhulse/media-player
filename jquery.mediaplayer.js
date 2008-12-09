@@ -13,7 +13,7 @@
 (function($) {
 
 	// the Flash player that will play the MP3 files
-	var SWF = null;
+	var MP3 = null;
 
 	// the audio element that will play the ogg files
 	var OGG = null;
@@ -39,7 +39,7 @@
 			loading : false
 	};
 
-	var audio = {
+	var media = {
 				pan : 0,
 				volume : 50,
 				volume_max : 100,
@@ -96,46 +96,46 @@
 			attach_audio_tag();
 			// send initial volume and position
 
-			this.events.onSoundVolume();
+			this.events.onMediaVolume();
 
-			$.periodic( this.events.onSoundPosition, { frequency: udpate_position_interval } );
+			$.periodic( this.events.onMediaPosition, { frequency: udpate_position_interval } );
 		},
 
 	  load: function( data ) {
 			metadata = data;
 
-			audio.current_url = metadata.mp3_url;
-			audioCommand( 'load' );
+			media.current_url = metadata.mp3_url;
+			mediaCommand( 'load' );
 		},
 
 	  stop: function() {
-			audioCommand( 'stop' );
+			mediaCommand( 'stop' );
 		},
 
 		play: function( position ) {
 			// do we resume or start at the stated position
-			audio.time_current = (audio.time_paused_at) ? audio.time_paused_at : position;
-			audioCommand( 'play' );
+			media.time_current = (media.time_paused_at) ? media.time_paused_at : position;
+			mediaCommand( 'play' );
 		},
 
 	  pause: function() {
-			audioCommand( 'pause' );
+			mediaCommand( 'pause' );
 	  },
 
 		louder: function() {
-      if ( audio.volume >= audio.volume_max ){
+      if ( media.volume >= media.volume_max ){
 				return;
 			}
-      audio.volume += audio.volume_increment;
-			audioCommand( 'volume' );
+      media.volume += media.volume_increment;
+			mediaCommand( 'volume' );
     },
 
     quieter: function() {
-      if ( audio.volume <= 0.0 ) {
+      if ( media.volume <= 0.0 ) {
 				return;
 			}
-      audio.volume -= audio.volume_increment;
-			audioCommand( 'volume' );
+      media.volume -= media.volume_increment;
+			mediaCommand( 'volume' );
     },
 
 		elapsedTime: function() {
@@ -143,23 +143,23 @@
 		},
 
 		getVolume: function() {
-			return audio.volume;
+			return media.volume;
 		},
 
 		getDuration: function() {
-			return audioCommand( 'duration' );
+			return mediaCommand( 'duration' );
 		},
 
 		seekTo: function(pos_in_secs) {
 			// save the current postion
-			audio.seek_pos_current = pos_in_secs;
-			update_sound_timer(pos_in_secs)
+			media.seek_pos_current = pos_in_secs;
+			update_media_timer(pos_in_secs)
 			if( ! interface.seeking ){
 				// if we are not seeking then pause and setup our function
 				interface.seeking = true;
 
 				if( this.isPlaying() ){
-					audioCommand('pause');
+					mediaCommand('pause');
 				}
 				// the seekMonitor checks to see if seeking has completed and
 				// then restarts the player. The delay is to allow keyboard
@@ -169,15 +169,15 @@
 		},
 
 		isPlaying: function() {
-			return audio.playing;
+			return media.playing;
 		},
 
 		isPaused: function() {
-			return ( audio.time_paused_at > 0 ) ? true : false;
+			return ( media.time_paused_at > 0 ) ? true : false;
 		},
 
 		isStopped: function() {
-			if( ! audio.playing && ! $.audioPlayer.isPaused() ){
+			if( ! media.playing && ! $.audioPlayer.isPaused() ){
 				return true;
 			}
 			return false;
@@ -187,10 +187,10 @@
 		events : {
 
 			// events from the flash player
-			onSoundComplete: function() {
-				audioCommand( 'stop' );
-				audio.playing = false;
-				sendEvent( "soundStop" );
+			onMediaComplete: function() {
+				mediaCommand( 'stop' );
+				media.playing = false;
+				sendEvent( "mediaStop" );
 			},
 
 			onFlashLoaded: function() {
@@ -199,39 +199,39 @@
 				// check for commands that were run before the swf was loaded
 				if ( saved_cmd.length ) {
 					$.each(saved_cmd, function(index, cmd) {
-						audioCommand(cmd);
+						mediaCommand(cmd);
 					});
 					saved_cmd = [];
 				}
 				update_controls();
 			},
 
-			onSoundLoaded: function() {
-				sendEvent( "soundLoaded" );
+			onMediaLoaded: function() {
+				sendEvent( "mediaLoaded" );
 			},
 
-			onSoundStop: function() {
-				audio.playing = false;
-				sendEvent( "soundStop" );
+			onMediaStop: function() {
+				media.playing = false;
+				sendEvent( "mediaStop" );
 				update_controls();
 			},
 
-			onSoundPause: function() {
-				audio.playing = false;
-				sendEvent( "soundPause" );
+			onMediaPause: function() {
+				media.playing = false;
+				sendEvent( "mediaPause" );
 			},
 
-			onSoundPlay: function() {
-				audio.playing = true;
-				sendEvent( "soundPlay" );
+			onMediaPlay: function() {
+				media.playing = true;
+				sendEvent( "mediaPlay" );
 			},
 
-			onSoundVolume: function() {
-				sendEvent( "soundVolumeChange", { volume: audio.volume})
+			onMediaVolume: function() {
+				sendEvent( "mediaVolumeChange", { volume: media.volume})
 			},
 
-			onSoundPosition: function() {
-				if( audio.playing ){
+			onMediaPosition: function() {
+				if( media.playing ){
 					update_controls();
 				}
 				return true;
@@ -251,7 +251,7 @@
 	}
 
 	function saveFlash() {
-		SWF = jQuery.swfobject.getObjectById(flash.attribs.id);
+		MP3 = jQuery.swfobject.getObjectById(flash.attribs.id);
 		flash.loading = false;
 	}
 
@@ -266,71 +266,71 @@
 			OGG = audio_elements[0];
 			// attach our events
 			$(document).bind('ended', function(e, m){
-				$.audioPlayer.events.onSoundComplete();
+				$.audioPlayer.events.onMediaComplete();
 			});
 			$(document).bind('seeking', function(e, m){
-				audio.seeking = true; 
+				media.seeking = true; 
 			});
 			$(document).bind('seeked', function(e, m){
-				audio.seeking = false; 
+				media.seeking = false; 
 			});
 			$(document).bind('loadedmetadata', function(e, m){
-				$.audioPlayer.events.onSoundLoaded();
+				$.audioPlayer.events.onMediaLoaded();
 			});
 
 		}
 		update_controls();
 	}
 
-	function audioCommand( cmd ) {
-		if ( audio.current_url.match( /\.ogg/ ) ) {
+	function mediaCommand( cmd ) {
+		if ( media.current_url.match( /\.ogg/ ) ) {
 			return OGGCommand( cmd );
 		}
-		else if ( audio.current_url.match( /\.mp3/ ) ) {
-			return SWFCommand( cmd );
+		else if ( media.current_url.match( /\.mp3/ ) ) {
+			return MP3Command( cmd );
 		}
 	}
 
-	function SWFCommand ( cmd ){
-		if ( flash.loading && ! SWF ) {
+	function MP3Command ( cmd ){
+		if ( flash.loading && ! MP3 ) {
 			// commands are saved for up to 1 second while the flash movie initialises.
 			saved_cmd.push(cmd);
 			return;
 		}
 		// then if there is no movie then send a message
-		if ( ! SWF ) {
-			sendEvent( "soundMessage", { message: 'No Flash MP3 player is available'} );
+		if ( ! MP3 ) {
+			sendEvent( "mediaMessage", { message: 'No Flash MP3 player is available'} );
 			return;
 		}
 		var e = $.audioPlayer.events;
 
 		switch( cmd ) {
-			case 'load' 	: //SWF.preloadSound(audio.current_url);
+			case 'load' 	: //MP3.preloadSound(media.current_url);
 											break;
 
-			case 'play' 	: SWF.startSound( audio.current_url, (audio.time_current * 1000), audio.volume, audio.pan );
-											e.onSoundPlay();
+			case 'play' 	: MP3.startSound( media.current_url, (media.time_current * 1000), media.volume, media.pan );
+											e.onMediaPlay();
 											break;
 
-			case 'stop' 	: SWF.stopSound( audio.current_url );
-											audio.time_paused_at = 0;
-											e.onSoundStop();
+			case 'stop' 	: MP3.stopSound( media.current_url );
+											media.time_paused_at = 0;
+											e.onMediaStop();
 											break;
 
-			case 'pause'	:	SWF.stopSound( audio.current_url );
-											audio.time_paused_at = ( SWF.getPosition( audio.current_url ) / 1000) || audio.time_paused_at;
-											e.onSoundPause();
+			case 'pause'	:	MP3.stopSound( media.current_url );
+											media.time_paused_at = ( MP3.getPosition( media.current_url ) / 1000) || media.time_paused_at;
+											e.onMediaPause();
 											break;
 
-			case 'volume' : SWF.setVolume( audio.current_url, audio.volume );
-											e.onSoundVolume();
+			case 'volume' : MP3.setVolume( media.current_url, media.volume );
+											e.onMediaVolume();
 											break;
 
-			case 'duration'		: return (SWF.getDuration(audio.current_url) / 1000 ) || 0;
+			case 'duration'		: return (MP3.getDuration(media.current_url) / 1000 ) || 0;
 											break;
 
 			case 'elapsedTime' : // flash does not return 0 for position if player is stopped. Annoying
-											return ( SWF.getPosition( audio.current_url ) / 1000 ) || 0;
+											return ( MP3.getPosition( media.current_url ) / 1000 ) || 0;
 											break;
 		}
 		return true;
@@ -343,32 +343,32 @@
 
 		switch( cmd ) {
 			case 'load' 	: $('audio').attr({
-													src: audio.current_url
+													src: media.current_url
 											});
-											setOGGVolume( audio.volume );
+											setOGGVolume( media.volume );
 											OGG.muted = false;
 											break;
 
-			case 'play' 	: OGG.currentTime = audio.time_current;
+			case 'play' 	: OGG.currentTime = media.time_current;
 											OGG.play();
-											e.onSoundPlay();
+											e.onMediaPlay();
 											break;
 
 			case 'stop' 	: OGG.pause();
 											// this is really a seek
 											OGG.currentTime = 0;
-											audio.time_paused_at = 0;
-											audio.time_current = 0;
-											e.onSoundStop();
+											media.time_paused_at = 0;
+											media.time_current = 0;
+											e.onMediaStop();
 											break;
 
 			case 'pause'	:	OGG.pause();
-											audio.time_paused_at = OGG.currentTime;
-											e.onSoundPause();
+											media.time_paused_at = OGG.currentTime;
+											e.onMediaPause();
 											break;
 
-			case 'volume' : setOGGVolume( audio.volume );
-											e.onSoundVolume();
+			case 'volume' : setOGGVolume( media.volume );
+											e.onMediaVolume();
 											break;
 
 			case 'duration'		: return OGG.duration || 0;
@@ -383,7 +383,7 @@
 	}
 
 	function setOGGVolume( vol ) {
-		OGG.volume = audio.volume / 100;
+		OGG.volume = media.volume / 100;
 	}
 
 	function sendEvent ( event, params ) {
@@ -391,30 +391,30 @@
 	}
 
 	function update_controls() {
-		update_sound_timer();
-		update_sound_slider();
+		update_media_timer();
+		update_media_slider();
 	}
 
-	function update_sound_timer( set_position ) {
+	function update_media_timer( set_position ) {
 		// stop updating if the audio is seeking
-		if( audio.seeking ){
+		if( media.seeking ){
 			return;
 		}
 		var position = set_position || current_position();
 		var readable_position = formatTime(position);
 
-		sendEvent( "soundTimerChange", { position: readable_position });
+		sendEvent( "mediaTimerChange", { position: readable_position });
 	}
 
-	function update_sound_slider() {
+	function update_media_slider() {
 		// stop updating if the audio is seeking
-		if( audio.seeking ){
+		if( media.seeking ){
 			return;
 		}
 		var position = current_position();
 		position = Math.floor(position);
 
-		sendEvent( "soundSliderChange", { position : position });
+		sendEvent( "mediaSliderChange", { position : position });
 	}
 
 	function seekMonitor(){
@@ -423,20 +423,20 @@
 			the seek is stable. THis is to stop lots of seeks
 			being sent until the slider has stopped moving
 		*/
-  	var duration = audioCommand('duration') || 0;
+  	var duration = mediaCommand('duration') || 0;
 		duration = Math.floor(duration);
 
-		if( audio.seek_pos_current == audio.seek_pos_prev ) {
+		if( media.seek_pos_current == media.seek_pos_prev ) {
 			interface.seeking = false;
 
-			audio.time_current = audio.time_paused_at = audio.seek_pos_current;
+			media.time_current = media.time_paused_at = media.seek_pos_current;
 
-			audioCommand('play');
+			mediaCommand('play');
 			// returning false stop the periodic
 			return false;
 		}
 		else{
-			audio.seek_pos_prev = audio.seek_pos_current;
+			media.seek_pos_prev = media.seek_pos_current;
 			return true;
 		}
 	}
@@ -445,7 +445,7 @@
 		if ( $.audioPlayer.isStopped() ) {
 			return 0;
 		}
-		return audioCommand('elapsedTime');
+		return mediaCommand('elapsedTime');
 	}
 
 	function formatTime( dur ){

@@ -65,32 +65,32 @@ jQuery(document).ready(function(){
 	// events must always come first as DOM elements could be updated from the initialise function
 	// e.g. the time and volume DOM containers
 
-	$(document).bind('soundVolumeChange', function(e, m){
+	$(document).bind('mediaVolumeChange', function(e, m){
 		$('#volume').html( m.volume + '%' );
 	});
 
-	$(document).bind('soundStop soundPause', function(e, m){
+	$(document).bind('mediaStop mediaPause', function(e, m){
 		$('#play').removeClass( 'playing');
 	});
 
-	$(document).bind('soundPlay', function(e, m){
+	$(document).bind('mediaPlay', function(e, m){
 		$('#play').addClass( 'playing');
 	});
 
-	$(document).bind('soundMessage', function(e, m){
+	$(document).bind('mediaMessage', function(e, m){
 		alert(m.message);
 	});
 
-	$(document).bind('soundTimerChange', function(e, m){
+	$(document).bind('mediaTimerChange', function(e, m){
 		$(".seconds").html( m.position );
 	});
 
-	$(document).bind('soundSliderChange', function(e, m){
+	$(document).bind('mediaSliderChange', function(e, m){
 		$("#percentage").attr( 'value', m.position)
 		fdSliderController.refresh();
 	});
 
-	$(document).bind('soundLoaded', function(e, m){
+	$(document).bind('mediaLoaded', function(e, m){
 		// wait until the player has accurate information
 		fdSliderController.setMax('percentage', Math.floor($.audioPlayer.getDuration()) );
 	});
