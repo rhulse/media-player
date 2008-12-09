@@ -59,7 +59,7 @@
 	};
 
 	var interface = {
-				seeking : false,  // the slider is seeking (as distinct from the underlying player component)
+				seeking : false  // the slider is seeking (as distinct from the underlying player component)
 	};
 
 	var metadata = {
