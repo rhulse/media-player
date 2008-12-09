@@ -21,13 +21,13 @@ var playlist;
 
 function updatePlaylist( id ){
 	// stop the current clip if there is one
-	$.audioPlayer.stop();
+	$.mediaPlayer.stop();
 
 	// load our clip
-	$.audioPlayer.load( { mp3_url: id } );
+	$.mediaPlayer.load( { mp3_url: id } );
 
 	// and play it (interupting any other clip that might be playing)
-	$.audioPlayer.play(0);
+	$.mediaPlayer.play(0);
 
 	console.log( 'item for list: ' + id );
 }
@@ -100,33 +100,33 @@ jQuery(document).ready(function(){
 
 	$(document).bind('mediaLoaded', function(e, m){
 		// wait until the player has accurate information
-		fdSliderController.setMax('percentage', Math.floor($.audioPlayer.getDuration()) );
+		fdSliderController.setMax('percentage', Math.floor($.mediaPlayer.getDuration()) );
 	});
 
-	$.audioPlayer.initialise( {
+	$.mediaPlayer.initialise( {
 			mp3Player			: "audioplayer.swf",
 			expressPlayer	: "expressInstall.swf",
 	});
 
 	$('#play').click( function(){
-		if( $.audioPlayer.isPlaying()){
-			$.audioPlayer.pause();
+		if( $.mediaPlayer.isPlaying()){
+			$.mediaPlayer.pause();
 		}
 		else{
-			$.audioPlayer.play(0);
+			$.mediaPlayer.play(0);
 		}
 	});
 
 	$('#stop').click( function(){
-		$.audioPlayer.stop();
+		$.mediaPlayer.stop();
 	});
 
    $('#quieter').click( function(){
-		$.audioPlayer.quieter();
+		$.mediaPlayer.quieter();
 	});
 
    $('#louder').click( function(){
-		$.audioPlayer.louder();
+		$.mediaPlayer.louder();
 	});
 
 })

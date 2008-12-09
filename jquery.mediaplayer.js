@@ -83,7 +83,7 @@
 	var saved_cmd = [];
 
   // Public Variables and Methods
-  $.audioPlayer = {
+  $.mediaPlayer = {
 
 		initialise: function( settings ) {
 			ignore_flash 		= settings.ignore_flash || ignore_flash;
@@ -177,7 +177,7 @@
 		},
 
 		isStopped: function() {
-			if( ! media.playing && ! $.audioPlayer.isPaused() ){
+			if( ! media.playing && ! $.mediaPlayer.isPaused() ){
 				return true;
 			}
 			return false;
@@ -266,7 +266,7 @@
 			OGG = audio_elements[0];
 			// attach our events
 			$(document).bind('ended', function(e, m){
-				$.audioPlayer.events.onMediaComplete();
+				$.mediaPlayer.events.onMediaComplete();
 			});
 			$(document).bind('seeking', function(e, m){
 				media.seeking = true; 
@@ -275,7 +275,7 @@
 				media.seeking = false; 
 			});
 			$(document).bind('loadedmetadata', function(e, m){
-				$.audioPlayer.events.onMediaLoaded();
+				$.mediaPlayer.events.onMediaLoaded();
 			});
 
 		}
@@ -302,7 +302,7 @@
 			sendEvent( "mediaMessage", { message: 'No Flash MP3 player is available'} );
 			return;
 		}
-		var e = $.audioPlayer.events;
+		var e = $.mediaPlayer.events;
 
 		switch( cmd ) {
 			case 'load' 	: //MP3.preloadSound(media.current_url);
@@ -339,7 +339,7 @@
 	function OGGCommand ( cmd ){
 		if ( ! OGG ) return false;
 
-		var e = $.audioPlayer.events;
+		var e = $.mediaPlayer.events;
 
 		switch( cmd ) {
 			case 'load' 	: $('audio').attr({
@@ -442,7 +442,7 @@
 	}
 
 	function current_position() {
-		if ( $.audioPlayer.isStopped() ) {
+		if ( $.mediaPlayer.isStopped() ) {
 			return 0;
 		}
 		return mediaCommand('elapsedTime');
@@ -467,7 +467,7 @@
 			}
 		}
 
-		$.audioPlayer.settings = {};
+		$.mediaPlayer.settings = {};
 
 })(jQuery);
 

@@ -12,7 +12,7 @@ System.security.allowDomain("*");
 
 var preloaded:Object = new Object();
 var sounds:Object = new Object();
-var callback = "$.audioPlayer.events.";
+var callback = "$.mediaPlayer.events.";
 
 function preloadSound(url:String) {
 	var s = newSound(url, false);
