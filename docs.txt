@@ -1,4 +1,4 @@
-The jQuery Audio Player plugin
+The jQuery Media Player plugin
 
 by Richard Hulse  (richard.hulse@radionz.co.nz)
 Copyright (c) 2008, Radio New Zealand Limited
@@ -7,8 +7,7 @@ Copyright (c) 2008, Radio New Zealand Limited
 NOTES
 ==================
 
-The plugin will load an MP3 or OGG file and play it. The running time and current
-volume can be fetched and displayed.
+The plugin will load an MP3 or OGG Vorbis file and play it. The running time and current volume can be fetched and displayed.
 
 There is much to do, such as:
 
@@ -16,8 +15,7 @@ There is much to do, such as:
 * Allow an audio metadata structure to be used on the load function
 * Playlist functionality
 
-The player will be implemented as a set of plugins so that anyone can build the exact functionality
-that they want.
+The player will be implemented as a set of plugins so that anyone can build the exact functionality that they want.
 
 ==================
 To Use the examples
@@ -27,7 +25,7 @@ Add the jQuery library v 1.2.6 and an MP3 or OGG file to the working directory a
 
 Example 01
 
-This is a plain old player that show the basic functionality of the module, with a simple slider. The slider does not have the ability to seek in the audio yet
+This is a plain old player that show the basic functionality of the module, with a simple slider. The slider does not have the ability to seek in the media yet
 
 Example 02
 
@@ -37,7 +35,7 @@ Does not do anything else yet...
 
 Example 03
 
-This opens the audio in the popup window and plays it. Simple and Easy.
+This opens the media in the popup window and plays it. Simple and Easy.
 
 It works by attaching a popup event to all audio links on the page, and sending the full file path to the player.
 
@@ -65,7 +63,7 @@ The plugins:
  jquery.cookieplaylist.js
  jquery.attacheplayerpopup.js
  jquery.fdslider.js
- jquery.audioplayer.js
+ jquery.mediaplayer.js
  
 Graphics
  Play Icons.png (An Adobe Fireworks file)
@@ -82,8 +80,8 @@ The license used by other code is noted in the source, but is compatible.
 
 The graphics files (Player Buttons) are licensed under a Attribution-Noncommercial-Share Alike 3.0 (New Zealand).
 
-Graphics files are from Radio New Zealand's audio player
-project at: http://github.com/rhulse/audio-player--using-javascript-/wikis/home
+Graphics files are from Radio New Zealand's media player
+project at: http://github.com/rhulse/audio-player/wikis/home
 
 ==================
 RELEASES

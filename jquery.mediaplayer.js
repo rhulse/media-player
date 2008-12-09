@@ -1,8 +1,8 @@
 /*
- 	Audio Player Plugin
+ 	Media Player Plugin
 
-	This plugin sets up an audio player that can handle MP3 and OGG formats
-	A flash object is used for MP3 and the <audio> tag (if supported) is for OGG.
+	This plugin sets up a Media player that can handle MP3 and OGG Vorbis formats
+	A flash object is used for MP3 and the <audio> tag (if supported) is for OGG Vorbis.
 
 	Copyright (c) 2008 Radio New Zealand
 	Author: Richard Hulse
