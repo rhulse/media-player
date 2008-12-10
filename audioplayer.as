@@ -34,13 +34,13 @@ function newSound(url:String, streaming:Boolean):Sound {
 	s.onLoad = function (success:Boolean):Void {
 		if (success) {
 			s.loaded = true;
-			flash.external.ExternalInterface.call(callback+"onSoundLoaded", s.url);
+			flash.external.ExternalInterface.call(callback+"onMediaLoaded", s.url);
 		}
 
 	};
 	
 	s.onSoundComplete = function ():Void {
-		flash.external.ExternalInterface.call(callback+"onSoundComplete", s.url);
+		flash.external.ExternalInterface.call(callback+"onMediaComplete", s.url);
 	};
 	
 	return s;
