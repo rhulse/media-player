@@ -67,10 +67,9 @@
 				title				: '',
 				description	: '',
 				duration		: 0,
-				mp3_url			: '',
-				mp3_length	: 0,
-				ogg_url			: '',
-				ogg_length	: 0
+				url					: '',
+				length			: 0,
+				media_type	: ''
 	}
 
 	// Set to true if you want to only use the <audio> tag
@@ -103,8 +102,13 @@
 
 	  load: function( data ) {
 			metadata = data;
-
-			media.current_url = metadata.mp3_url;
+		  if ( metadata.url.match( /\.ogg/ ) ) {
+				metadata.media_type = 'vorbis';
+		  }
+		  else if ( metadata.url.match( /\.mp3/ ) ) {
+				metadata.media_type = 'mp3';
+		  }
+			media.current_url = metadata.url;
 			mediaCommand( 'load' );
 		},
 
@@ -269,10 +273,10 @@
 				$.mediaPlayer.events.onMediaComplete();
 			});
 			$(document).bind('seeking', function(e, m){
-				media.seeking = true; 
+				media.seeking = true;
 			});
 			$(document).bind('seeked', function(e, m){
-				media.seeking = false; 
+				media.seeking = false;
 			});
 			$(document).bind('loadedmetadata', function(e, m){
 				$.mediaPlayer.events.onMediaLoaded();
@@ -283,12 +287,15 @@
 	}
 
 	function mediaCommand( cmd ) {
-		if ( media.current_url.match( /\.ogg/ ) ) {
-			return OGGCommand( cmd );
+		var result = false;
+		switch( metadata.media_type ){
+			case 'vorbis'	: result = OGGCommand( cmd );
+											break;
+
+			case 'mp3'		: result = MP3Command( cmd );
+											break;
 		}
-		else if ( media.current_url.match( /\.mp3/ ) ) {
-			return MP3Command( cmd );
-		}
+		return result
 	}
 
 	function MP3Command ( cmd ){
