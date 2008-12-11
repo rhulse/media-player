@@ -11,6 +11,21 @@
 <script type="text/javascript" src="jquery.fdslider.js "></script>
 <script type="text/javascript">
 
+// Add your example files metadata here.
+
+var metadata = {
+	asset_id		: 0,
+	title				: 'The Robot Song',
+	description	: 'by the Interrobang Cartel http://interrobang.jwgh.org/songs/',
+	duration		: 153,
+	url					: 'robot2.mp3',
+	length			: 0,
+}
+
+var metadata_ogg = {
+ 	url	: 'review.ogg'
+}
+
 function sliderseek(e){
 	$.mediaPlayer.seekTo(e.value);
 }
@@ -55,7 +70,7 @@ jQuery(document).ready(function(){
 			expressPlayer	: "expressInstall.swf",
 	});
 
-	$.mediaPlayer.load( metadata_ogg );
+	$.mediaPlayer.load( metadata );
 
 	$('#play').click( function(){
 		if( $.mediaPlayer.isPlaying()){
