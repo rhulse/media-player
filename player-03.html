@@ -24,7 +24,7 @@ function updatePlaylist( id ){
 	$.mediaPlayer.stop();
 
 	// load our clip
-	$.mediaPlayer.load( { mp3_url: id } );
+	$.mediaPlayer.load( { url: id } );
 
 	// and play it (interupting any other clip that might be playing)
 	$.mediaPlayer.play(0);
