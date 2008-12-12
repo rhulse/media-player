@@ -16,29 +16,12 @@
 	var MP3 = null;
 
 	// the audio element that will play the ogg files
-	var OGG = null;
+	var VORBIS = null;
 
-	// the flash values used to set up the flash movie in the page.
-	var flash = {
-			path : "audioplayer.swf",
-			vars : {},
-			params : {
-				allowScriptAccess: 'always',
-				wMode: 'transparent',
-				swLiveConnect: true
-	 		},
-			ver : "8.0.0",
-			width : 1,
-			height: 1,
-			exp: "expressInstall.swf",
-			replace : "mp3-player p",
-			attribs : {
-				id:"flashplayer",
-				name:"flashplayer"
-			},
-			loading : false
-	};
+	// the media object that gets used
+	var M = null;
 
+	// the data about the current media
 	var media = {
 				pan : 0,
 				volume : 50,
@@ -78,21 +61,15 @@
 	// this is how often to update the position count (in seconds)
 	var udpate_position_interval = 0.1;
 
-	// a place to save the first command if we have to wait for the flash object to load
-	var saved_cmd = [];
-
   // Public Variables and Methods
   $.mediaPlayer = {
 
 		initialise: function( settings ) {
-			ignore_flash 		= settings.ignore_flash || ignore_flash;
-			flash.path 			= settings.mp3Player || flash.path;
-			flash.exp 			= settings.mp3Export || flash.exp;
 
-			if( ! ignore_flash ) {
-				attach_flash_player();
-			}
-			attach_audio_tag();
+			MP3 = new mp3_player( settings, this.events );
+
+			VORBIS = new vorbis_player( settings, this.events );
+
 			// send initial volume and position
 
 			this.events.onMediaVolume();
@@ -104,26 +81,28 @@
 			metadata = data;
 		  if ( metadata.url.match( /\.ogg/ ) ) {
 				metadata.media_type = 'vorbis';
+				M = VORBIS;
 		  }
 		  else if ( metadata.url.match( /\.mp3/ ) ) {
 				metadata.media_type = 'mp3';
+				M = MP3;
 		  }
 			media.current_url = metadata.url;
-			mediaCommand( 'load' );
+			M.load();
 		},
 
 	  stop: function() {
-			mediaCommand( 'stop' );
+			M.stop();
 		},
 
 		play: function( position ) {
 			// do we resume or start at the stated position
 			media.time_current = (media.time_paused_at) ? media.time_paused_at : position;
-			mediaCommand( 'play' );
+			M.play();
 		},
 
 	  pause: function() {
-			mediaCommand( 'pause' );
+			M.pause();
 	  },
 
 		louder: function() {
@@ -131,7 +110,7 @@
 				return;
 			}
       media.volume += media.volume_increment;
-			mediaCommand( 'volume' );
+			M.volume( media.volume );
     },
 
     quieter: function() {
@@ -139,7 +118,7 @@
 				return;
 			}
       media.volume -= media.volume_increment;
-			mediaCommand( 'volume' );
+			M.volume( media.volume );
     },
 
 		elapsedTime: function() {
@@ -151,7 +130,7 @@
 		},
 
 		getDuration: function() {
-			return mediaCommand( 'duration' );
+			return M.duration();
 		},
 
 		seekTo: function(pos_in_secs) {
@@ -163,7 +142,7 @@
 				interface.seeking = true;
 
 				if( this.isPlaying() ){
-					mediaCommand('pause');
+					M.pause();
 				}
 				// the seekMonitor checks to see if seeking has completed and
 				// then restarts the player. The delay is to allow keyboard
@@ -192,20 +171,14 @@
 
 			// events from the flash player
 			onMediaComplete: function() {
-				mediaCommand( 'stop' );
+				M.stop();
 				media.playing = false;
 				sendEvent( "mediaStop" );
 			},
 
 			onFlashLoaded: function() {
-				saveFlash();
-				flash.loading = false;
-				// check for commands that were run before the swf was loaded
-				if ( saved_cmd.length ) {
-					$.each(saved_cmd, function(index, cmd) {
-						mediaCommand(cmd);
-					});
-					saved_cmd = [];
+				if( MP3 ){
+					MP3.flashLoaded();
 				}
 				update_controls();
 			},
@@ -245,153 +218,6 @@
 	};
 
  	//Private Functions
-	function attach_flash_player() {
-		var f = flash;
-		$("body").append('<div id="mp3-player"><p></p></div>');
-		flash.loading = true;
-		jQuery.swfobject.embedSWF( f.path, f.replace, f.width, f.height, f.ver, f.exp, f.vars, f.params, f.attribs);
-		// the movie has 1 seconds to load, after which we assume it has probably failed
-		$.periodic(function(){ flash.loading = false; return false; }, {frequency: 1.0});
-	}
-
-	function saveFlash() {
-		MP3 = jQuery.swfobject.getObjectById(flash.attribs.id);
-		flash.loading = false;
-	}
-
-	function attach_audio_tag() {
-		$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
-		audio_elements = $('audio');
-		// testing for volume is not a good test for Vorbis support because
-		// for example, Safari has <audio> tag support for quicktime, so will pass this test
-		// so we test that it's mozilla too. Seems like a safe assumption for now.
-		if ( 'volume' in audio_elements[0] && $.browser.mozilla ){
-			// a single element is used at the moment.
-			OGG = audio_elements[0];
-			// attach our events
-			$(document).bind('ended', function(e, m){
-				$.mediaPlayer.events.onMediaComplete();
-			});
-			$(document).bind('seeking', function(e, m){
-				media.seeking = true;
-			});
-			$(document).bind('seeked', function(e, m){
-				media.seeking = false;
-			});
-			$(document).bind('loadedmetadata', function(e, m){
-				$.mediaPlayer.events.onMediaLoaded();
-			});
-
-		}
-		update_controls();
-	}
-
-	function mediaCommand( cmd ) {
-		var result = false;
-		switch( metadata.media_type ){
-			case 'vorbis'	: result = OGGCommand( cmd );
-											break;
-
-			case 'mp3'		: result = MP3Command( cmd );
-											break;
-		}
-		return result
-	}
-
-	function MP3Command ( cmd ){
-		if ( flash.loading && ! MP3 ) {
-			// commands are saved for up to 1 second while the flash movie initialises.
-			saved_cmd.push(cmd);
-			return;
-		}
-		// then if there is no movie then send a message
-		if ( ! MP3 ) {
-			sendEvent( "mediaMessage", { message: 'No Flash MP3 player is available'} );
-			return;
-		}
-		var e = $.mediaPlayer.events;
-
-		switch( cmd ) {
-			case 'load' 	: //MP3.preloadSound(media.current_url);
-											break;
-
-			case 'play' 	: MP3.startSound( media.current_url, (media.time_current * 1000), media.volume, media.pan );
-											e.onMediaPlay();
-											break;
-
-			case 'stop' 	: MP3.stopSound( media.current_url );
-											media.time_paused_at = 0;
-											e.onMediaStop();
-											break;
-
-			case 'pause'	:	MP3.stopSound( media.current_url );
-											media.time_paused_at = ( MP3.getPosition( media.current_url ) / 1000) || media.time_paused_at;
-											e.onMediaPause();
-											break;
-
-			case 'volume' : MP3.setVolume( media.current_url, media.volume );
-											e.onMediaVolume();
-											break;
-
-			case 'duration'		: return (MP3.getDuration(media.current_url) / 1000 ) || 0;
-											break;
-
-			case 'elapsedTime' : // flash does not return 0 for position if player is stopped. Annoying
-											return ( MP3.getPosition( media.current_url ) / 1000 ) || 0;
-											break;
-		}
-		return true;
-	}
-
-	function OGGCommand ( cmd ){
-		if ( ! OGG ) return false;
-
-		var e = $.mediaPlayer.events;
-
-		switch( cmd ) {
-			case 'load' 	: $('audio').attr({
-													src: media.current_url
-											});
-											setOGGVolume( media.volume );
-											OGG.muted = false;
-											break;
-
-			case 'play' 	: OGG.currentTime = media.time_current;
-											OGG.play();
-											e.onMediaPlay();
-											break;
-
-			case 'stop' 	: OGG.pause();
-											// this is really a seek
-											OGG.currentTime = 0;
-											media.time_paused_at = 0;
-											media.time_current = 0;
-											e.onMediaStop();
-											break;
-
-			case 'pause'	:	OGG.pause();
-											media.time_paused_at = OGG.currentTime;
-											e.onMediaPause();
-											break;
-
-			case 'volume' : setOGGVolume( media.volume );
-											e.onMediaVolume();
-											break;
-
-			case 'duration'		: return OGG.duration || 0;
-											break;
-
-			case 'elapsedTime' : // this is the current seeked to time
-											return OGG.currentTime;
-											break
-
-		}
-		return true;
-	}
-
-	function setOGGVolume( vol ) {
-		OGG.volume = media.volume / 100;
-	}
 
 	function sendEvent ( event, params ) {
 		$(document).trigger( event, params )
@@ -430,7 +256,7 @@
 			the seek is stable. THis is to stop lots of seeks
 			being sent until the slider has stopped moving
 		*/
-  	var duration = mediaCommand('duration') || 0;
+		var duration = M.duration() || 0;
 		duration = Math.floor(duration);
 
 		if( media.seek_pos_current == media.seek_pos_prev ) {
@@ -438,7 +264,7 @@
 
 			media.time_current = media.time_paused_at = media.seek_pos_current;
 
-			mediaCommand('play');
+			M.play();
 			// returning false stop the periodic
 			return false;
 		}
@@ -452,29 +278,200 @@
 		if ( $.mediaPlayer.isStopped() ) {
 			return 0;
 		}
-		return mediaCommand('elapsedTime');
+		return M.elapsedTime();
 	}
 
 	function formatTime( dur ){
 
-			var difference = Math.floor(dur);
-			seconds    =  difference % 60;
-			difference = (difference - seconds) / 60;
-			minutes    =  difference % 60;
-			difference = (difference - minutes) / 60;
-			hours      =  difference % 24;
+		var difference = Math.floor(dur);
+		seconds    =  difference % 60;
+		difference = (difference - seconds) / 60;
+		minutes    =  difference % 60;
+		difference = (difference - minutes) / 60;
+		hours      =  difference % 24;
 
-	    seconds = ((seconds <  10) ? "0" : "") + seconds;
+    seconds = ((seconds <  10) ? "0" : "") + seconds;
 
-			if(hours > 0){
-		    return hours + ":" + minutes + ":" + seconds;
-			}
-			else{
-		    return minutes + ":" + seconds;
-			}
+		if(hours > 0){
+	    return hours + ":" + minutes + ":" + seconds;
+		}
+		else{
+	    return minutes + ":" + seconds;
+		}
+	}
+
+	function vorbis_player( options, e) {
+		var OGG = null;
+
+		$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
+		audio_elements = $('audio');
+		// testing for volume is not a good test for Vorbis support because
+		// for example, Safari has <audio> tag support for quicktime, so will pass this test
+		// so we test that it's mozilla too. Seems like a safe assumption for now.
+		if ( 'volume' in audio_elements[0] && $.browser.mozilla ){
+			// a single element is used at the moment.
+			OGG = audio_elements[0];
+			// attach our events
+			$(document).bind('ended', function(e, m){
+				$.mediaPlayer.events.onMediaComplete();
+			});
+			$(document).bind('seeking', function(e, m){
+				media.seeking = true;
+			});
+			$(document).bind('seeked', function(e, m){
+				media.seeking = false;
+			});
+			$(document).bind('loadedmetadata', function(e, m){
+				$.mediaPlayer.events.onMediaLoaded();
+			});
+
 		}
 
-		$.mediaPlayer.settings = {};
+		this.load = function(){
+			$('audio').attr({
+				src: media.current_url
+			});
+			setOGGVolume( media.volume );
+			OGG.muted = false;
+		};
+
+		this.play = function(){
+			OGG.currentTime = media.time_current;
+			OGG.play();
+			e.onMediaPlay();
+		};
+
+		this.stop = function(){
+			OGG.pause();
+			// this is really a seek
+			OGG.currentTime = 0;
+			media.time_paused_at = 0;
+			media.time_current = 0;
+			e.onMediaStop();
+		};
+
+		this.pause = function(){
+			OGG.pause();
+			media.time_paused_at = OGG.currentTime;
+			e.onMediaPause();
+		};
+
+		this.volume = function(){
+			setOGGVolume( media.volume );
+			e.onMediaVolume();
+		};
+
+		this.duration = function(){
+			return OGG.duration || 0;
+		};
+
+		this.elapsedTime = function(){
+			// this is the current time that has been seeked to
+			return OGG.currentTime;
+		};
+
+		function setOGGVolume( vol ) {
+			OGG.volume = media.volume / 100;
+		}
+
+	}
+
+
+	function mp3_player(options, e) {
+
+		var MP3 = null;
+
+		var flash = {
+				path : "audioplayer.swf",
+				vars : {},
+				params : {
+					allowScriptAccess: 'always',
+					wMode: 'transparent',
+					swLiveConnect: true
+				},
+				ver : "8.0.0",
+				width : 1,
+				height: 1,
+				exp: "expressInstall.swf",
+				replace : "mp3-player p",
+				attribs : {
+					id:"flashplayer",
+					name:"flashplayer"
+				},
+				loading : false
+		};
+
+		// a place to save the first commands if we have to wait for the flash object to load
+		var saved_cmd = [];
+
+		$.extend(flash, options);
+
+		f = flash;
+
+		// initialisation routine
+		$("body").append('<div id="mp3-player"><p></p></div>');
+		flash.loading = true;
+		jQuery.swfobject.embedSWF( f.path, f.replace, f.width, f.height, f.ver, f.exp, f.vars, f.params, f.attribs);
+		// the movie has 1 seconds to load, after which we assume it has probably failed
+		$.periodic(function(){ f.loading = false; return false; }, {frequency: 1.0});
+
+		this.load = function(){
+			// if ( flash.loading && ! MP3 ) {
+			// 	// commands are saved for up to 1 second while the flash movie initialises.
+			// 	saved_cmd.push(cmd);
+			// 	return;
+			// }
+
+		};
+
+		this.play = function(){
+			MP3.startSound( media.current_url, (media.time_current * 1000), media.volume, media.pan );
+			e.onMediaPlay();
+		};
+
+		this.stop = function(){
+			MP3.stopSound( media.current_url );
+			media.time_paused_at = 0;
+			e.onMediaStop();
+		}
+
+		this.pause = function(){
+			MP3.stopSound( media.current_url );
+			media.time_paused_at = ( MP3.getPosition( media.current_url ) / 1000) || media.time_paused_at;
+			e.onMediaPause();
+		};
+
+		this.volume = function(){
+			MP3.setVolume( media.current_url, media.volume );
+			e.onMediaVolume();
+		};
+
+		this.duration = function(){
+			return (MP3.getDuration(media.current_url) / 1000 ) || 0;
+		};
+
+		this.elapsedTime = function(){
+			// flash does not return 0 for position if player is stopped. Annoying
+			return ( MP3.getPosition( media.current_url ) / 1000 ) || 0;
+		};
+
+		this.isLoading = function(){
+			return f.loading;
+		};
+
+		this.flashLoaded = function() {
+			MP3 = jQuery.swfobject.getObjectById(f.attribs.id);
+			f.loading = false;
+			// check for commands that were run before the swf was loaded
+			if ( saved_cmd.length ) {
+				$.each(saved_cmd, function(index, cmd) {
+					eval(this.cmd);
+				});
+				saved_cmd = [];
+			}
+		};
+	}
+
 
 })(jQuery);
 
