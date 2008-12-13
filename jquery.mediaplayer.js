@@ -419,53 +419,50 @@
 
 		// initialisation routine
 		$("body").append('<div id="mp3-player"><p></p></div>');
-		flash.loading = true;
+		f.loading = true;
 		jQuery.swfobject.embedSWF( f.path, f.replace, f.width, f.height, f.ver, f.exp, f.vars, f.params, f.attribs);
 		// the movie has 1 seconds to load, after which we assume it has probably failed
 		$.periodic(function(){ f.loading = false; return false; }, {frequency: 1.0});
 
 		this.load = function(){
-			// if ( flash.loading && ! MP3 ) {
-			// 	// commands are saved for up to 1 second while the flash movie initialises.
-			// 	saved_cmd.push(cmd);
-			// 	return;
-			// }
 
 		};
 
 		this.play = function(){
+			if( isLoading( this.play ) ) return;
 			MP3.startSound( media.current_url, (media.time_current * 1000), media.volume, media.pan );
 			e.onMediaPlay();
 		};
 
 		this.stop = function(){
+			if( isLoading( this.stop ) ) return;
 			MP3.stopSound( media.current_url );
 			media.time_paused_at = 0;
 			e.onMediaStop();
 		}
 
 		this.pause = function(){
+			if( isLoading( this.pause ) ) return;
 			MP3.stopSound( media.current_url );
 			media.time_paused_at = ( MP3.getPosition( media.current_url ) / 1000) || media.time_paused_at;
 			e.onMediaPause();
 		};
 
 		this.volume = function(){
+			if( isLoading( this.volume ) ) return;
 			MP3.setVolume( media.current_url, media.volume );
 			e.onMediaVolume();
 		};
 
 		this.duration = function(){
+			if( isLoading( this.duration ) ) return 0;
 			return (MP3.getDuration(media.current_url) / 1000 ) || 0;
 		};
 
 		this.elapsedTime = function(){
+			if( isLoading( this.elapsedTime ) ) return 0;
 			// flash does not return 0 for position if player is stopped. Annoying
 			return ( MP3.getPosition( media.current_url ) / 1000 ) || 0;
-		};
-
-		this.isLoading = function(){
-			return f.loading;
 		};
 
 		this.flashLoaded = function() {
@@ -474,11 +471,21 @@
 			// check for commands that were run before the swf was loaded
 			if ( saved_cmd.length ) {
 				$.each(saved_cmd, function(index, cmd) {
-					eval(this.cmd);
+					cmd();
 				});
 				saved_cmd = [];
 			}
 		};
+
+		function isLoading( cmd ){
+			if ( f.loading && ! MP3 ) {
+				// commands are saved for up to 1 second while the flash movie initialises.
+				saved_cmd.push(cmd);
+				return true;
+			}
+			return false;
+		};
+
 	}
 
 
