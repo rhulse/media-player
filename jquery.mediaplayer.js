@@ -300,6 +300,11 @@
 		}
 	}
 
+	/*
+		This is the vorbis player object that wraps an audio element and provides a
+		standadised interface to the audio player module
+	*/
+
 	function vorbis_player( options, e) {
 		var OGG = null;
 
@@ -376,6 +381,10 @@
 
 	}
 
+	/*
+		this is the mp3 player object (a flash movie) that wraps an audio element and provides
+		a	standadised interface to the audio player module
+	*/
 
 	function mp3_player(options, e) {
 
