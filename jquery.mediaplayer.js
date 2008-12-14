@@ -94,7 +94,9 @@
 	  stop: function() {
 			media.time_current = 0;
 			media.time_paused_at = 0;
-			M.stop();
+			if(this.isPlaying()){
+				M.stop();
+			}
 		},
 
 		play: function( position ) {
