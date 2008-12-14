@@ -99,7 +99,7 @@
 
 		play: function( position ) {
 			// do we resume or start at the stated position
-			media.time_current = (media.time_paused_at) ? media.time_paused_at : position;
+			media.time_current = (media.time_paused_at) ? media.time_paused_at : ( position ? position : 0);
 			M.play(media.time_current);
 		},
 
