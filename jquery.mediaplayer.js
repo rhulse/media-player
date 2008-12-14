@@ -348,7 +348,9 @@
 		};
 
 		this.play = function(pos_in_secs){
-			OGG.currentTime = pos_in_secs;
+			try{
+				OGG.currentTime = pos_in_secs;
+			}catch(e){}
 			OGG.play();
 			e.onMediaPlay();
 		};
