@@ -13,7 +13,7 @@
 <script type="text/javascript" src="jquery.fdslider.js "></script>
 <script type="text/javascript">
 
-// two playlist are iused.
+// two playlists are used.
 // the queue holds items sent over from the main window
 var queue;
 // the playlist holds the real current playlist
@@ -38,8 +38,6 @@ function checkPlaylistQueue(){
 	}
 	return true;
 }
-
-$.periodic( checkPlaylistQueue, { frequency: 1 } );
 
 jQuery(document).ready(function(){
 
@@ -107,6 +105,8 @@ jQuery(document).ready(function(){
 			mp3Player			: "audioplayer.swf",
 			expressPlayer	: "expressInstall.swf",
 	});
+
+	$.periodic( checkPlaylistQueue, { frequency: 1 } );
 
 	$('#play').click( function(){
 		if( $.mediaPlayer.isPlaying()){
