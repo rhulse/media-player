@@ -88,21 +88,24 @@
 				M = MP3;
 		  }
 			media.current_url = metadata.url;
-			M.load();
+			M.load(media.current_url);
 		},
 
 	  stop: function() {
+			media.time_current = 0;
+			media.time_paused_at = 0;
 			M.stop();
 		},
 
 		play: function( position ) {
 			// do we resume or start at the stated position
 			media.time_current = (media.time_paused_at) ? media.time_paused_at : position;
-			M.play();
+			M.play(media.time_current);
 		},
 
 	  pause: function() {
 			M.pause();
+			media.time_current = media.time_paused_at= current_position();
 	  },
 
 		louder: function() {
@@ -264,7 +267,7 @@
 
 			media.time_current = media.time_paused_at = media.seek_pos_current;
 
-			M.play();
+			M.play(media.time_current);
 			// returning false stop the periodic
 			return false;
 		}
@@ -308,6 +311,8 @@
 	function vorbis_player( options, e) {
 		var OGG = null;
 
+		var current_url;
+
 		$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
 		audio_elements = $('audio');
 		// testing for volume is not a good test for Vorbis support because
@@ -332,16 +337,18 @@
 
 		}
 
-		this.load = function(){
+		this.load = function(url){
+			current_url = url;
+
 			$('audio').attr({
-				src: media.current_url
+				src: current_url
 			});
 			setOGGVolume( media.volume );
 			OGG.muted = false;
 		};
 
-		this.play = function(){
-			OGG.currentTime = media.time_current;
+		this.play = function(pos_in_secs){
+			OGG.currentTime = pos_in_secs;
 			OGG.play();
 			e.onMediaPlay();
 		};
@@ -350,15 +357,13 @@
 			OGG.pause();
 			// this is really a seek
 			OGG.currentTime = 0;
-			media.time_paused_at = 0;
-			media.time_current = 0;
 			e.onMediaStop();
 		};
 
 		this.pause = function(){
 			OGG.pause();
-			media.time_paused_at = OGG.currentTime;
 			e.onMediaPause();
+			return OGG.currentTime;
 		};
 
 		this.volume = function(){
@@ -410,6 +415,8 @@
 				loading : false
 		};
 
+		var current_url;
+
 		// a place to save the first commands if we have to wait for the flash object to load
 		var saved_cmd = [];
 
@@ -424,45 +431,44 @@
 		// the movie has 1 seconds to load, after which we assume it has probably failed
 		$.periodic(function(){ f.loading = false; return false; }, {frequency: 1.0});
 
-		this.load = function(){
-
+		this.load = function(url){
+			current_url = url;
 		};
 
-		this.play = function(){
+		this.play = function(pos_in_secs){
 			if( isLoading( this.play ) ) return;
-			MP3.startSound( media.current_url, (media.time_current * 1000), media.volume, media.pan );
+			MP3.startSound( current_url, (pos_in_secs * 1000) );
 			e.onMediaPlay();
 		};
 
 		this.stop = function(){
 			if( isLoading( this.stop ) ) return;
-			MP3.stopSound( media.current_url );
-			media.time_paused_at = 0;
+			MP3.stopSound( current_url );
 			e.onMediaStop();
 		}
 
 		this.pause = function(){
 			if( isLoading( this.pause ) ) return;
-			MP3.stopSound( media.current_url );
-			media.time_paused_at = ( MP3.getPosition( media.current_url ) / 1000) || media.time_paused_at;
+			MP3.stopSound( current_url );
 			e.onMediaPause();
+			return ( MP3.getPosition( current_url ) / 1000) || media.time_paused_at;
 		};
 
 		this.volume = function(){
 			if( isLoading( this.volume ) ) return;
-			MP3.setVolume( media.current_url, media.volume );
+			MP3.setVolume( current_url, media.volume );
 			e.onMediaVolume();
 		};
 
 		this.duration = function(){
 			if( isLoading( this.duration ) ) return 0;
-			return (MP3.getDuration(media.current_url) / 1000 ) || 0;
+			return (MP3.getDuration(current_url) / 1000 ) || 0;
 		};
 
 		this.elapsedTime = function(){
 			if( isLoading( this.elapsedTime ) ) return 0;
 			// flash does not return 0 for position if player is stopped. Annoying
-			return ( MP3.getPosition( media.current_url ) / 1000 ) || 0;
+			return ( MP3.getPosition( current_url ) / 1000 ) || 0;
 		};
 
 		this.flashLoaded = function() {
