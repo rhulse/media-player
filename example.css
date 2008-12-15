@@ -77,3 +77,13 @@ button.fd-slider-handle:focus::-moz-focus-inner { border-color: transparent; }
 body .slider-drag-vertical{cursor:N-resize !important;}
 body .slider-drag-horizontal{cursor:W-resize !important;}
 .fd_hide_slider_input{display:none;}
+
+
+/* events table */
+h3.events{margin:30px 0 0 10px;}
+table{margin:10px;border:1px solid gray; border-width: 1px 0 0 1px;border-spacing:0;}
+th.event{width:150px;}
+th.count{width:50px;}
+th,td{border:1px solid gray; border-width: 0 1px 1px 0; padding:0px; }
+td.count{text-align:center;}
+td.event{padding:1px 9px;}
