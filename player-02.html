@@ -13,6 +13,83 @@
 <script type="text/javascript" src="jquery.fdslider.js "></script>
 <script type="text/javascript">
 
+function getMetadata(id){
+	switch( id ){
+		case '1790855'	:
+			return {
+				title				: 'Raj Nahna:volunteering for Obama',
+				description	: 'Wellingtonian who quit his legal job to volunteer as a policy analyst in Missouri rof the Democratic presdential campaign',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+				};
+		 case '1790858' :
+			return{
+				title 			: 'Barbara Anderson : a life in words',
+				description : 'New Zealand author who had her first book published when she was 63,and has since enjoyed internatoinal success as a writer',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+				};
+		 case '1790859' :
+			return{
+				title 			: 'Sir Roger Moore : being 007',
+				description : 'TV and movie star( The Saint,James Bond ),who was awarded a knighthood for his work for UNICEF',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+			};
+		 case '1790862' :
+			return{
+				title 			: 'Art with Mary Kisler : enchanted gardens',
+				description : 'The Mackelvie Curator of International  Art at the Auckland Art Gallery discusses upcoming exhibition The Enchanted garden',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+			};
+		 case '1790865' :
+			return{
+				title 			: 'Caitlin Smith : singing 007',
+				description : 'Jazz singer and vocal coach who will perform at the showcase event The Music is Bond;James Bond',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+			};
+		 case '1790885' :
+			return{
+				title 			: 'The Old Spice Boys : comic swing',
+				description : 'Australian trio ( ukulele,snare drum,tea chest bass) touring New Zealand and playing at the second NZ Ukulele Festival',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+			};
+		 case '1790888' :
+			return{
+				title 			: 'Food with Jennifer McLagan : eating fat',
+				description : 'Chef,food stylist and writer whose new book is called Fat;an appreciation of a Misunderstood Ingredient, with recipes',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+			};
+		 case '1790890' :
+			return{
+				title 			: "Children's Books with Kate De Goldi",
+				description : 'Kate De Goldi discusses new books by Gavin Bishop, Dylan Owen, Martin Bailey and J.L.Brisley',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+			};
+		 case '1790889' :
+			return{
+				title 			: 'E-mails',
+				description : 'Kim reads out your emails',
+				duration		: 153,
+				url					: 'robot2.mp3',
+				length			: 0
+			};
+	}
+}
+
 // two playlist are iused.
 // the queue holds items sent over from the main window
 var queue;
@@ -22,6 +99,18 @@ var playlist;
 function updatePlaylist( id ){
 	// shell function
 	console.log( 'item for list: ' + id );
+	data = getMetadata(id);
+	console.log(data);
+
+	// stop the current clip if there is one
+	$.mediaPlayer.stop();
+
+	// load our clip
+	$.mediaPlayer.load( data );
+
+	// and play it (interupting any other clip that might be playing)
+	$.mediaPlayer.play(0);
+
 }
 
 function checkPlaylistQueue(){
@@ -163,12 +252,12 @@ jQuery(document).ready(function(){
 		  	<li><input type="image" alt="Louder" src="0.gif" id="louder"/></li>
 	  	</ul>
 		</div>
-		
+
 		<div id="slider-wrapper">
 	    <label for="percentage" id="percentageLabel" class="hide">Position Sider Range: 0 - 100</label>
 	    <input name="percentage" id="percentage" type="text" title="Range: 0 - 100" class="fd_slider fd_tween fd_range_0_180 fd_kbinc_5 fd_kbhop_30 fd_hide_input fd_slider_cb_update_sliderseek" value="0"  maxlength="3" />
 		</div>
-		
+
 		<div id="volume">
 
 		</div>
