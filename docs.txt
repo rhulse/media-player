@@ -56,6 +56,7 @@ Example files:
  example-01.html
  example-02.html
  example-03.html
+ example-events.html
  example.css
 
 The plugins:
@@ -64,7 +65,10 @@ The plugins:
  jquery.attacheplayerpopup.js
  jquery.fdslider.js
  jquery.mediaplayer.js
- 
+
+audio tag event processing:
+ eventwatcher.js
+	 
 Graphics
  Play Icons.png (An Adobe Fireworks file)
  play-icons.png
@@ -86,6 +90,16 @@ project at: http://github.com/rhulse/audio-player/wikis/home
 ==================
 RELEASES
 ==================
+
+#0.25 (16 December)
+
+Internally the media playing elements are now created as objects. This caused a few bugs which were fixed.
+
+Code was added to example 2 to allow the player to autoplay a file by id instead of by URL. The URL is stored in an object, but this could just as easily be return from a CMS via AJAX.
+
+Other bugs fixed includes the slider stability bug from 0.22 below.
+
+Another example was added - example-events.html - to proved a method to track events sent from the <audio> tag. This is for debugging as the HTML5 spec evolves.
 
 # 0.22 (3 Dec 2008) 
 
