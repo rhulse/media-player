@@ -31,7 +31,9 @@ function checkPlaylistQueue(){
 	return true;
 }
 
-$.periodic( checkPlaylistQueue, { frequency: 1 } );
+function sliderseek(e){
+	$.mediaPlayer.seekTo(e.value);
+}
 
 jQuery(document).ready(function(){
 
@@ -99,6 +101,8 @@ jQuery(document).ready(function(){
 			mp3Player			: "audioplayer.swf",
 			expressPlayer	: "expressInstall.swf",
 	});
+
+	$.periodic( checkPlaylistQueue, { frequency: 1 } );
 
 	$('#play').click( function(){
 		if( $.mediaPlayer.isPlaying()){
