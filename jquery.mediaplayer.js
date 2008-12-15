@@ -106,8 +106,7 @@
 		},
 
 	  pause: function() {
-			M.pause();
-			media.time_current = media.time_paused_at= current_position();
+			media.time_current = media.time_paused_at = M.pause(); 
 	  },
 
 		louder: function() {
