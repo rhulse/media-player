@@ -345,7 +345,7 @@
 			$('audio').attr({
 				src: current_url
 			});
-			setOGGVolume( media.volume );
+			setOGGVolume( 50 );
 			OGG.muted = false;
 		};
 
