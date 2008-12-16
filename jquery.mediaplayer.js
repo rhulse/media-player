@@ -77,6 +77,21 @@
 
 	  load: function( metadata ) {
 
+			// grab the source
+			if( metadata.attachTo){
+				media.current_url = $(metadata.attachTo).attr('src');
+				type = $(metadata.attachTo).attr('type');
+				if ( type.match( /codecs=theora/ )){
+					metadata.media_type = 'theora';
+				}
+				else if( type.match( /codecs=vorbis/ )){
+					metadata.media_type = 'vorbis';
+				}
+			}
+			else{
+				media.current_url = metadata.url;
+			}
+
 			switch( metadata.media_type ){
 			  case 'vorbis' : M = new vorbis_player( metadata, this.events );
 												break;
@@ -87,7 +102,6 @@
 			  case 'mp3' 		: M = MP3;
 												break;
 			}
-			media.current_url = metadata.url;
 			M.load(media.current_url);
 		},
 
