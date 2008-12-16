@@ -9,12 +9,14 @@ h1{margin:10px;}
 #player-wrapper{position:relative;  border:1px solid #310C04; background:#DDD;
 	width:500px;height:150px;z-index:99;}
 
-#time-wrapper{position:absolute; top:65px; left:390px;}
+
+#controls-wrapper{position:relative; height:100px;}
+#time-wrapper{position:absolute; top:15px; left:390px;}
 
 #counter{padding:5px; margin:10px; border:1px solid gray; width:5em; text-align:right;
 	font-size:14px; font-weight:bold; background:#FFF;}
 
-#volume{ position:absolute; left: 300px; top:75px; z-index:100; font-size:14px;}
+#volume{ position:absolute; left: 300px; top:25px; z-index:100; font-size:14px;}
 
 ul{margin:5px 0 0 0;padding:0;list-style:none;}
 li{margin:0;padding:0;}
@@ -24,7 +26,7 @@ li{margin:0;padding:0;}
 li h3{font-size:1.0em;padding:0 5px; font-weight:bold;}
 li p{display:block; padding: 2px 5px 0 ; font-weight:normal; font-size:0.8em; }
 
-#controls{margin:0px 10px; position:absolute;top:60px;}
+#controls{margin:0px 10px; position:absolute;top:10px;}
 #controls li{list-style:none;display:inline;padding-right:5px;}
 #controls li input{
   background:url(play-icons.png) no-repeat top left;
@@ -49,7 +51,7 @@ dt{font-size:0.9em;padding-bottom:5px;}
 dt a{background:transparent url(mysource_files/audioicon.png) no-repeat scroll 0 2px;color:#CC0000;padding:0 0 6px 21px;}
 dd{padding:0 60px 10px 21px;}
 
-#slider-wrapper{position:absolute;top:110px; padding:10px; width:475px;}
+#slider-wrapper{position:absolute;top:60px; padding:10px; width:475px;}
 .fd-slider{position:relative;width:100%;height:20px;text-align:center;border:0 none;text-decoration:none;display:block;
 -moz-user-select:none;-khtml-user-select:nonecursor:pointer;
 }
