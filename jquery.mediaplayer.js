@@ -68,8 +68,6 @@
 
 			MP3 = new mp3_player( settings, this.events );
 
-			VORBIS = new vorbis_player( settings, this.events );
-
 			// send initial volume and position
 
 			this.events.onMediaVolume();
@@ -77,16 +75,18 @@
 			$.periodic( this.events.onMediaPosition, { frequency: udpate_position_interval } );
 		},
 
-	  load: function( data ) {
-			metadata = data;
-		  if ( metadata.url.match( /\.ogg/ ) ) {
-				metadata.media_type = 'vorbis';
-				M = VORBIS;
-		  }
-		  else if ( metadata.url.match( /\.mp3/ ) ) {
-				metadata.media_type = 'mp3';
-				M = MP3;
-		  }
+	  load: function( metadata ) {
+
+			switch( metadata.media_type ){
+			  case 'vorbis' : M = new vorbis_player( metadata, this.events );
+												break;
+
+			  case 'theora' : M =  new theora_player( metadata, this.events );
+												break;
+
+			  case 'mp3' 		: M = MP3;
+												break;
+			}
 			media.current_url = metadata.url;
 			M.load(media.current_url);
 		},
@@ -104,7 +104,7 @@
 		},
 
 	  pause: function() {
-			media.time_current = media.time_paused_at = M.pause(); 
+			media.time_current = media.time_paused_at = M.pause();
 	  },
 
 		louder: function() {
@@ -303,23 +303,45 @@
 	}
 
 	/*
-		This is the vorbis player object that wraps an audio element and provides a
-		standadised interface to the audio player module
+		Shell functions that setup the two types of objects
 	*/
 
-	function vorbis_player( options, e) {
+	function vorbis_player( options, e ){
+		return new html5_player( 'audio', options, e );
+	}
+
+	function theora_player( options, e ){
+		return new html5_player( 'video', options, e );
+	}
+
+	/*
+	 This is the vorbis player object that wraps an audio element and provides a
+	 standadised interface to the audio player module
+	*/
+
+	function html5_player( type, options, e) {
 		var OGG = null;
 
 		var current_url;
 
-		$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
-		audio_elements = $('audio');
+		if(options.attachTo){
+			media_elements = $(options.attachTo);
+		}
+		else{
+			if(type == 'audio'){
+				$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
+			}
+			else{
+				$("body").append('<video id="ogg-player" type="video/ogg; codecs=theora"></video>');
+			}
+			media_elements = $(type);
+		}
 		// testing for volume is not a good test for Vorbis support because
 		// for example, Safari has <audio> tag support for quicktime, so will pass this test
 		// so we test that it's mozilla too. Seems like a safe assumption for now.
-		if ( 'volume' in audio_elements[0] && $.browser.mozilla ){
+		if ( 'volume' in media_elements[0] && $.browser.mozilla ){
 			// a single element is used at the moment.
-			OGG = audio_elements[0];
+			OGG = media_elements[0];
 			// attach our events
 			$(document).bind('ended', function(e, m){
 				$.mediaPlayer.events.onMediaComplete();
@@ -339,7 +361,7 @@
 		this.load = function(url){
 			current_url = url;
 
-			$('audio').attr({
+			$(type).attr({
 				src: current_url
 			});
 			setOGGVolume( 50 );

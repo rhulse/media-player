@@ -2,80 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Audio Player example</title>
+<title>Video Player example</title>
 <style type="text/css" media="screen">
  @import 'example.css';
 </style>
 <script type="text/javascript" src="jquery-1.2.6.min.js "></script>
 <script type="text/javascript" src="jquery.mediaplayer.js "></script>
-<script type="text/javascript" src="jquery.cookieplaylist.js "></script>
-<script type="text/javascript" src="jquery.cookie.js "></script>
 <script type="text/javascript" src="jquery.fdslider.js "></script>
+<script type="text/javascript" src="eventwatcher.js "></script>
 <script type="text/javascript">
 
-// two playlists are used.
-// the queue holds items sent over from the main window
-var queue;
-// the playlist holds the real current playlist
-var playlist;
-
-function updatePlaylist( url ){
-	// stop the current clip if there is one
-	$.mediaPlayer.stop();
-
-	var type = 'mp3';
-
-  if ( url.match( /\.ogg/ ) ) {
-     type = 'vorbis';
-  }
-	// load our clip
-	$.mediaPlayer.load( { url: url, media_type: type } );
-
-	// and play it (interupting any other clip that might be playing)
-	$.mediaPlayer.play(0);
-
-	console.log( 'item for list: ' + url );
-}
-
-function checkPlaylistQueue(){
-	if( queue.count() ){
-		updatePlaylist( queue.pop() );
-	}
-	return true;
-}
+// Add your example files metadata here.
 
 function sliderseek(e){
 	$.mediaPlayer.seekTo(e.value);
 }
 
 jQuery(document).ready(function(){
-
-	// initialise our cookie playlists
-	queue = $.cookiePlaylist.initialise( 'audio_playlist_queue' );
-	playlist 	= $.cookiePlaylist.initialise();
-
-	// register our cleanup function
-	// do stuff when the play window is closed
-	$(window).unload( function () {
-		$.cookie('audioPlayerOpen', null, {path: '/'});
-	});
-
-	/*
-		Set a cookie so that the parent window knows that we are open.
-
-		We have to signal via cookies as the user might have moved to another
-		page in the parent window since the player was opened.
-
-		This is a valid action - the user might be listening to  audio, and we
-		don't want to reload new content into the same window if they click
-		on another link but instead pass the new URL via a function call.
-
-		Apart from saving on traffic, this will allow a future playlist
-		functionality to work correctly.
-	*/
-	var time = new Date();
-	var now = Math.floor(time.getTime()/1000);
-	$.cookie('audioPlayerOpen', now, { expires: 1, path: '/'});
 
 	// events must always come first as DOM elements could be updated from the initialise function
 	// e.g. the time and volume DOM containers
@@ -115,7 +58,7 @@ jQuery(document).ready(function(){
 			expressPlayer	: "expressInstall.swf",
 	});
 
-	$.periodic( checkPlaylistQueue, { frequency: 1 } );
+	$.mediaPlayer.load( { url: 'smeck.ogg', media_type: 'theora', attachTo: '#test-video' } );
 
 	$('#play').click( function(){
 		if( $.mediaPlayer.isPlaying()){
@@ -143,18 +86,8 @@ jQuery(document).ready(function(){
 </script>
 </head>
 <body>
-	<h1>Audio Player</h1>
-	<div id="player-wrapper">
-		<!-- Section for displaying data about the item -->
-		<div id="playlist">
-			<h2 class="hide">Current Item</h2>
-			<ul class="items">
-				<li>
-					<h3>This is the title of the item up to 64 characters in width  XXXX</h3>
-					<p>This is the description of the item and can be up to 128 chars, which is a lot longer than the title and would extent out to here X.</p>
-				</li>
-			</ul>
-		</div>
+	<h1>Video Player</h1>
+	<video id="test-video" src="smeck"></video>
 
 		<div id="controls-wrapper">
 			<!-- Section for showing the current clip time -->
@@ -187,8 +120,10 @@ jQuery(document).ready(function(){
 
 			</div>
 		</div>
-	</div>
 
+	<h3 class="events">Video tag events</h3>
+	<div id="events">
+	</div>
 
 </body>
 </html>
