@@ -58,7 +58,7 @@ jQuery(document).ready(function(){
 			expressPlayer	: "expressInstall.swf",
 	});
 
-	$.mediaPlayer.load( { attachTo: '#test-video' } );
+	$.mediaPlayer.load( { attachToId: 'test-video' } );
 
 	$('#play').click( function(){
 		if( $.mediaPlayer.isPlaying()){
@@ -87,7 +87,7 @@ jQuery(document).ready(function(){
 </head>
 <body>
 	<h1>Video Player</h1>
-	<video id="test-video" src="smeck" type="video/ogg; codecs=theora"></video>
+	<video id="test-video" src="smeck.ogg" type="video/ogg; codecs=theora"></video>
 
 		<div id="controls-wrapper">
 			<!-- Section for showing the current clip time -->

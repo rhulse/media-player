@@ -78,9 +78,10 @@
 	  load: function( metadata ) {
 
 			// grab the source
-			if( metadata.attachTo){
-				media.current_url = $(metadata.attachTo).attr('src');
-				type = $(metadata.attachTo).attr('type');
+			if( metadata.attachToId){
+				media.current_url = $(metadata.attachToId).attr('src');
+				type = $( '#' + metadata.attachToId).attr('type');
+
 				if ( type.match( /codecs=theora/ )){
 					metadata.media_type = 'theora';
 				}
@@ -333,49 +334,64 @@
 	 standadised interface to the audio player module
 	*/
 
-	function html5_player( type, options, e) {
+	function html5_player( tag, options, e) {
 		var OGG = null;
 
 		var current_url;
 
-		if(options.attachTo){
-			media_elements = $(options.attachTo);
+		var media_element = null;
+
+		var type = '';
+
+		// do we use the provided element or make a new one?
+		if ( options.attachToId ) {
+			media_element = document.getElementById( options.attachToId );
 		}
 		else{
-			if(type == 'audio'){
-				$("body").append('<audio id="ogg-player" type="audio/ogg; codecs=vorbis"></audio>');
+			if ( tag == 'audio' ) {
+				type = 'audio/ogg;codecs=vorbis';
+				el = document.createElement('audio');
+				if ( canPlayType( el, type ) == 'probably' ) {
+					media_element = el;
+				}
 			}
-			else{
-				$("body").append('<video id="ogg-player" type="video/ogg; codecs=theora"></video>');
+			else {
+				type = 'video/ogg;codecs=theora';
+				el = document.createElement('video');
+				if ( canPlayType( el, type ) == 'probably' ) {
+					media_element = el;
+				}
 			}
-			media_elements = $(type);
 		}
-		// testing for volume is not a good test for Vorbis support because
-		// for example, Safari has <audio> tag support for quicktime, so will pass this test
-		// so we test that it's mozilla too. Seems like a safe assumption for now.
-		if ( 'volume' in media_elements[0] && $.browser.mozilla ){
-			// a single element is used at the moment.
-			OGG = media_elements[0];
-			// attach our events
-			$(document).bind('ended', function(e, m){
-				$.mediaPlayer.events.onMediaComplete();
-			});
-			$(document).bind('seeking', function(e, m){
-				media.seeking = true;
-			});
-			$(document).bind('seeked', function(e, m){
-				media.seeking = false;
-			});
-			$(document).bind('loadedmetadata', function(e, m){
-				$.mediaPlayer.events.onMediaLoaded();
-			});
 
+		if ( media_element ) {
+			// attach our events
+			jQuery(media_element)
+				.attr('type', type)
+				.bind('ended', function(e, m){
+					$.mediaPlayer.events.onMediaComplete();
+				})
+				.bind('seeking', function(e, m){
+					media.seeking = true;
+				})
+				.bind('seeked', function(e, m){
+					media.seeking = false;
+				})
+				.bind('loadedmetadata', function(e, m){
+					$.mediaPlayer.events.onMediaLoaded();
+				});
+
+			// only append new elements
+			if ( ! options.attachToId ) {
+				$("body").append(media_element);
+			}
+			OGG = media_element
 		}
 
 		this.load = function(url){
 			current_url = url;
 
-			$(type).attr({
+			$(media_element).attr({
 				src: current_url
 			});
 			setOGGVolume( 50 );
@@ -529,6 +545,20 @@
 			return false;
 		};
 
+	}
+
+	function canPlayType( el, type ){
+		if ( 'canPlayType' in el ){
+			return el.canPlayType(type);
+		}
+		else if( 'volume' in el && $.browser.mozilla ){
+			// testing for volume is the fallback test for Vorbis support because
+			// for example, Safari has <audio> tag support for quicktime, so will pass this test
+			// so we test that it's mozilla too. Seems like a safe assumption for now.
+			// This will remain in until Firefox 3.1 final is released
+			return 'probably';
+		}
+		return 'no';
 	}
 
 
