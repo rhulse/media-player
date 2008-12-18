@@ -173,6 +173,7 @@ var fdSliderController = (function() {
                                 createSlider(options);
                         };
                 };
+								$(document).trigger( 'slidersLoaded' );
                 return true;
         };
         var destroySingleSlider = function(id) {
