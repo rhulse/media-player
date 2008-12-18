@@ -367,7 +367,6 @@
 		if ( media_element ) {
 			// attach our events
 			jQuery(media_element)
-				.attr('type', type)
 				.bind('ended', function(e, m){
 					$.mediaPlayer.events.onMediaComplete();
 				})
@@ -383,7 +382,15 @@
 
 			// only append new elements
 			if ( ! options.attachToId ) {
-				$("body").append(media_element);
+				$("body").append(media_element)
+				jQuery(media_element).attr({
+					type : type
+				});
+
+			}
+			else {
+				// turn off any existing controls
+				jQuery(media_element).removeAttr( 'controls' );
 			}
 			OGG = media_element
 		}
