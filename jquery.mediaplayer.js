@@ -188,7 +188,7 @@
 
 			// events from the flash player
 			onMediaComplete: function() {
-				M.stop();
+				$.mediaPlayer.stop();
 				media.playing = false;
 				sendEvent( "mediaStop" );
 			},
