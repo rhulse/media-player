@@ -12,10 +12,20 @@
 <script type="text/javascript" src="eventwatcher.js "></script>
 <script type="text/javascript">
 
-// Add your example files metadata here.
+var slider_is_loaded = false;
+var media_is_loaded = false;
 
 function sliderseek(e){
 	$.mediaPlayer.seekTo(e.value);
+}
+
+// we can only update when the slider AND the metadata is available
+
+function setUp(){
+	if( slider_is_loaded && media_is_loaded){
+		fdSliderController.setMax('percentage', Math.floor($.mediaPlayer.getDuration()) );
+		$('#length').html( '(' + $.mediaPlayer.getDuration(true) + ')' );
+	}
 }
 
 jQuery(document).ready(function(){
@@ -49,10 +59,17 @@ jQuery(document).ready(function(){
 	});
 
 	$(document).bind('mediaLoaded', function(e, m){
+		media_is_loaded = true;
 		// wait until the player has accurate information
-		fdSliderController.setMax('percentage', Math.floor($.mediaPlayer.getDuration()) );
+		setUp();
 	});
-
+	
+	$(document).bind('slidersLoaded', function(e, m){
+		slider_is_loaded = true;
+		// wait until slider is loaded
+		setUp();
+	});
+	
 	$.mediaPlayer.initialise( {
 			mp3Player			: "audioplayer.swf",
 			expressPlayer	: "expressInstall.swf",
