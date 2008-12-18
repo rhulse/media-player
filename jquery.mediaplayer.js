@@ -334,7 +334,7 @@
 	 standadised interface to the audio player module
 	*/
 
-	function html5_player( tag, options, e) {
+	function html5_player( tag, options, pev) {
 		var OGG = null;
 
 		var current_url;
@@ -368,7 +368,7 @@
 			// attach our events
 			jQuery(media_element)
 				.bind('ended', function(e, m){
-					$.mediaPlayer.events.onMediaComplete();
+					pev.onMediaComplete();
 				})
 				.bind('seeking', function(e, m){
 					media.seeking = true;
@@ -377,7 +377,7 @@
 					media.seeking = false;
 				})
 				.bind('loadedmetadata', function(e, m){
-					$.mediaPlayer.events.onMediaLoaded();
+					pev.onMediaLoaded();
 				});
 
 			// only append new elements
@@ -410,25 +410,25 @@
 				OGG.currentTime = pos_in_secs;
 			}catch(e){}
 			OGG.play();
-			e.onMediaPlay();
+			pev.onMediaPlay();
 		};
 
 		this.stop = function(){
 			OGG.pause();
 			// this is really a seek
 			OGG.currentTime = 0;
-			e.onMediaStop();
+			pev.onMediaStop();
 		};
 
 		this.pause = function(){
 			OGG.pause();
-			e.onMediaPause();
+			pev.onMediaPause();
 			return OGG.currentTime;
 		};
 
 		this.volume = function(){
 			setOGGVolume( media.volume );
-			e.onMediaVolume();
+			pev.onMediaVolume();
 		};
 
 		this.duration = function(){
@@ -451,7 +451,7 @@
 		a	standadised interface to the audio player module
 	*/
 
-	function mp3_player(options, e) {
+	function mp3_player(options, pev) {
 
 		var MP3 = null;
 
@@ -498,26 +498,26 @@
 		this.play = function(pos_in_secs){
 			if( isLoading( this.play ) ) return;
 			MP3.startSound( current_url, (pos_in_secs * 1000) );
-			e.onMediaPlay();
+			pev.onMediaPlay();
 		};
 
 		this.stop = function(){
 			if( isLoading( this.stop ) ) return;
 			MP3.stopSound( current_url );
-			e.onMediaStop();
+			pev.onMediaStop();
 		}
 
 		this.pause = function(){
 			if( isLoading( this.pause ) ) return;
 			MP3.stopSound( current_url );
-			e.onMediaPause();
+			pev.onMediaPause();
 			return ( MP3.getPosition( current_url ) / 1000) || media.time_paused_at;
 		};
 
 		this.volume = function(){
 			if( isLoading( this.volume ) ) return;
 			MP3.setVolume( current_url, media.volume );
-			e.onMediaVolume();
+			pev.onMediaVolume();
 		};
 
 		this.duration = function(){
