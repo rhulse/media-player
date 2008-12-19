@@ -163,9 +163,8 @@
 				// if we are not seeking then pause and setup our function
 				controls.seeking = true;
 
-				if( this.isPlaying() ){
-					M.pause(true); // true means we are pausing to seek
-				}
+				M.pause(true); // true means we are pausing to seek
+
 				// the seekMonitor checks to see if seeking has completed and
 				// then restarts the player. The delay is to allow keyboard
 				// users a chance to nudge the value
@@ -437,6 +436,9 @@
 			// the play function WILL need to seek at the end of the see
 			if ( ! pausing_to_seek ) {
 				paused = true;
+			}
+			else{
+				paused = false;
 			}
 			OGG.pause();
 			pev.onMediaPause();
