@@ -146,8 +146,13 @@
 			return media.volume;
 		},
 
-		getDuration: function() {
-			return M.duration();
+		getDuration: function( format ) {
+			if( format ){
+				return formatTime(M.duration());
+			}
+			else {
+				return M.duration();
+			}
 		},
 
 		seekTo: function(pos_in_secs) {
