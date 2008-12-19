@@ -164,7 +164,7 @@
 				interface.seeking = true;
 
 				if( this.isPlaying() ){
-					M.pause();
+					M.pause(true); // true means we are pausing to seek
 				}
 				// the seekMonitor checks to see if seeking has completed and
 				// then restarts the player. The delay is to allow keyboard
@@ -348,6 +348,8 @@
 
 		var type = '';
 
+		var paused = false;
+
 		// do we use the provided element or make a new one?
 		if ( options.attachToId ) {
 			media_element = document.getElementById( options.attachToId );
@@ -411,21 +413,31 @@
 		};
 
 		this.play = function(pos_in_secs){
-			try{
-				OGG.currentTime = pos_in_secs;
-			}catch(e){}
+			// if we are paused there is no need to seek as
+			// the element (unlike flash) knows where it is already
+			if ( ! paused ) {
+				try{
+					OGG.currentTime = pos_in_secs;
+				}catch(e){}
+			}
 			OGG.play();
 			pev.onMediaPlay();
 		};
 
 		this.stop = function(){
 			OGG.pause();
+			paused = false;
 			// this is really a seek
 			OGG.currentTime = 0;
 			pev.onMediaStop();
 		};
 
-		this.pause = function(){
+		this.pause = function(pausing_to_seek){
+			// if we've paused to seek, then this is not a 'real' pause
+			// the play function WILL need to seek at the end of the see
+			if ( ! pausing_to_seek ) {
+				paused = true;
+			}
 			OGG.pause();
 			pev.onMediaPause();
 			return OGG.currentTime;
