@@ -41,7 +41,7 @@
 				seek_pos_prev : 0
 	};
 
-	var interface = {
+	var controls = {
 				seeking : false  // the slider is seeking (as distinct from the underlying player component)
 	};
 
@@ -159,9 +159,9 @@
 			// save the current postion
 			media.seek_pos_current = pos_in_secs;
 			update_media_timer(pos_in_secs)
-			if( ! interface.seeking ){
+			if( ! controls.seeking ){
 				// if we are not seeking then pause and setup our function
-				interface.seeking = true;
+				controls.seeking = true;
 
 				if( this.isPlaying() ){
 					M.pause(true); // true means we are pausing to seek
@@ -282,7 +282,7 @@
 		duration = Math.floor(duration);
 
 		if( media.seek_pos_current == media.seek_pos_prev ) {
-			interface.seeking = false;
+			controls.seeking = false;
 
 			media.time_current = media.time_paused_at = media.seek_pos_current;
 
