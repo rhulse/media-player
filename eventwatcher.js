@@ -114,3 +114,67 @@ function Hash()
 		return typeof(this.items[in_key]) != 'undefined';
 	}
 }
+
+
+/*
+ 	UL FIFO display
+
+	This plugin creates an unordered list and allow you to push elements onto it
+	The list is limited to a specifed length
+
+	call:
+
+	$.ulfifo({ element : "selector", size: 10 })
+
+	Copyright (c) 2008 Richard Hulse
+	Author: Richard Hulse
+	This software is released under the GNU GPL version 2 or later. <http://www.opensource.org/licenses/gpl-2.0.php>
+
+*/
+
+(function($) {
+
+  $.ulfifo = {
+
+		initialise: function( options ) {
+			return new fifo( options );
+		}
+	}
+
+	function fifo( options ) {
+
+		var settings = {
+			size 	: 10,
+			el		: '#fifo'
+		}
+
+		var opts = $.extend({}, settings, options);
+
+		var queue = new Array();
+
+		this.add_message = function(msg){
+			queue.unshift(msg);
+			if ( queue.length >= opts.size ) {
+				queue.pop();
+			}
+			display_queue();
+		};
+
+		this.clear = function(id){
+			queue = [];
+		};
+
+		this.show = function(){
+			console.log( "Queue : " + queue.join() );
+		}
+
+		function display_queue(){
+		}
+	};
+
+})(jQuery);
+
+
+
+
+
