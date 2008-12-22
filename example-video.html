@@ -6,10 +6,10 @@
 <style type="text/css" media="screen">
  @import 'example.css';
 </style>
-<script type="text/javascript" src="jquery-1.2.6.min.js "></script>
-<script type="text/javascript" src="jquery.mediaplayer.js "></script>
-<script type="text/javascript" src="jquery.fdslider.js "></script>
-<script type="text/javascript" src="eventwatcher.js "></script>
+<script type="text/javascript" src="jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="jquery.mediaplayer.js"></script>
+<script type="text/javascript" src="jquery.fdslider.js"></script>
+<script type="text/javascript" src="eventwatcher.js"></script>
 <script type="text/javascript">
 
 var slider_is_loaded = false;
@@ -63,13 +63,13 @@ jQuery(document).ready(function(){
 		// wait until the player has accurate information
 		setUp();
 	});
-	
+
 	$(document).bind('slidersLoaded', function(e, m){
 		slider_is_loaded = true;
 		// wait until slider is loaded
 		setUp();
 	});
-	
+
 	$.mediaPlayer.initialise( {
 			mp3Player			: "audioplayer.swf",
 			expressPlayer	: "expressInstall.swf",
