@@ -30,6 +30,8 @@ function setUp(){
 
 jQuery(document).ready(function(){
 
+	$('#test-video').trackEvents('#events');
+
 	// events must always come first as DOM elements could be updated from the initialise function
 	// e.g. the time and volume DOM containers
 

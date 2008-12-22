@@ -80,6 +80,9 @@ body .slider-drag-vertical{cursor:N-resize !important;}
 body .slider-drag-horizontal{cursor:W-resize !important;}
 .fd_hide_slider_input{display:none;}
 
+/* events rolling list */
+#fifo{border:2px solid gray; height:15em; width:200px; margin:0 0 0 10px; padding: 5px;}
+#fifo ul{margin:0;}
 
 /* events table */
 h3.events{margin:30px 0 0 10px;}
