@@ -21,10 +21,12 @@ var metadata = {
 	duration		: 153,
 	url					: 'robot2.mp3',
 	length			: 0,
+	media_type 	: 'mp3'
 }
 
 var metadata_ogg = {
- 	url	: 'review.ogg'
+ 	url	: 'review.ogg',
+	media_type 	: 'vorbis'
 }
 
 function sliderseek(e){
@@ -72,6 +74,8 @@ jQuery(document).ready(function(){
 	});
 
 	$.mediaPlayer.load( metadata_ogg );
+
+	$('audio').trackEvents('#events');
 
 	$('#play').click( function(){
 		if( $.mediaPlayer.isPlaying()){
