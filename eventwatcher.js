@@ -107,6 +107,9 @@
 
   $.fn.trackEvents = function(container_div) {
 
+		var last_event = new Date();
+		var now = new Date();
+
 		var fifo_div = '<div id="fifo"></div>';
 
 		var status = '<table>';
@@ -134,7 +137,11 @@
 
 			$(this).bind( 'loadstart progress	suspend	load	abort	error	emptied	play	pause	stalled	loadedmetadata	loadeddata	waiting	playing	canplay	canplaythrough	seeking	seeked	ended	ratechange	durationchange	volumechange',
 				function(ev){
-					fifo.add_message(ev.type);
+					now = new Date();
+					elapsed = now - last_event;
+					elapsed = (elapsed > 1000) ? ( Math.floor (elapsed/1000) + ' S' ) : elapsed + ' mS';
+					fifo.add_message(ev.type + ' (' + elapsed + ')');
+					last_event = new Date();
 				});
 
 				// attach all the events
